@@ -1,4 +1,6 @@
 /node_modules/
 /public/build/
+/obj/
+/bin/
 
 .DS_Store
