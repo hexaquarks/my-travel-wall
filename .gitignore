@@ -1,6 +1,5 @@
-/node_modules/
-/public/build/
-/obj/
-/bin/
+client/node_modules/
+server/obj/
+server/bin/
 
-.DS_Store
+server/.DS_Store
