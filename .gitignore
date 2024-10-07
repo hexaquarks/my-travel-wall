@@ -1,4 +1,5 @@
 client/node_modules/
+client/.svelte-kit
 server/node_modules/
 server/obj/
 server/bin/

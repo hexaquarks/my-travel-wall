@@ -3,7 +3,6 @@
     import { Button } from "flowbite-svelte";
     import { Input, Label } from "flowbite-svelte";
     // import { get } from "svelte/store";
-
     // $: Note: reactive declaration this will make the component rerender if it changes.
     $: mode = $page.url.searchParams.get("mode") || "signin";
 </script>
