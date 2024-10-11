@@ -4,7 +4,7 @@
 
     export let key: string = "";
     export let isPlaceholder: boolean;
-    export let onAddCard: () => void;
+    export let onOpenCountryPicker: () => void;
     export let onDeleteCard: (id: string) => void;
 </script>
 
@@ -15,7 +15,7 @@
         >
             Add a country
         </p>
-        <Button class="w-fit" on:click={onAddCard}>
+        <Button class="w-fit" on:click={onOpenCountryPicker}>
             <PlusOutline class="w-6 h-6 ms-2 text-white" />
         </Button>
     </Card>
