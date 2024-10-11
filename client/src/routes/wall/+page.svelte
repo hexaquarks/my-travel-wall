@@ -3,10 +3,24 @@
     import CountryCard from "$lib/components/CountryCard.svelte";
     import { Card, Button } from "flowbite-svelte";
     import { fade, scale, slide } from "svelte/transition";
+    import { onMount } from "svelte";
+    import { fetchCountries } from "$lib/util/CountrySelectionService.svelte";
 
     let showModal = true;
     let selectedCountry = "";
-    let countries = ["USA", "Canada", "Germany", "Australia"];
+    let countries: Array<String> = [];
+
+    onMount(async () => {
+        try {
+            countries = await fetchCountries();
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    });
+
+    const handleCountryChange = (event: any) => {
+        selectedCountry = event.target.value;
+    };
 
     type CountryCardType = {
         id: string;
@@ -64,8 +78,13 @@
                     transition:fade={{ delay: 0, duration: 2000 }}
                 >
                     <h2>Showcase the country you visited!</h2>
-                    <select bind:value={selectedCountry}>
-                        <option value="" disabled>Select a country</option>
+                    <select
+                        bind:value={selectedCountry}
+                        on:change={handleCountryChange}
+                    >
+                        {#if countries.length === 0}
+                            <option>Loading countries...</option>
+                        {/if}
                         {#each countries as country}
                             <option value={country}>{country}</option>
                         {/each}
@@ -86,17 +105,6 @@
 </div>
 
 <style>
-    .modal {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        max-height: 600px;
-    }
-
     .modal-buttons {
         margin-top: 20px;
         display: flex;
