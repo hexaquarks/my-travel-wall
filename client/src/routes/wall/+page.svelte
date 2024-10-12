@@ -1,7 +1,6 @@
 <script lang="ts">
     import { v4 as uuid } from "uuid";
     import CountryCard from "$lib/components/CountryCard.svelte";
-    import { Card, Button } from "flowbite-svelte";
     import { fade, scale, slide } from "svelte/transition";
     import { onMount } from "svelte";
     import { fetchCountries } from "$lib/util/CountrySelectionService.svelte";
@@ -69,9 +68,10 @@
     <!-- Modal for selecting a country -->
     {#if showModal}
         <div transition:fade={{ delay: 0, duration: 75 }}>
-            <Card
-                size="xl"
-                class="w-7/12 max-w-[700px] h-screen max-h-[600px] border absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+            <div
+                class="card p-4 w-7/12 max-w-[700px] h-screen max-h-[600px]
+                 absolute top-1/2 left-1/2 transform -translate-x-1/2
+                -translate-y-1/2"
             >
                 <div
                     class="h-full flex flex-col items-center justify-around"
@@ -79,6 +79,7 @@
                 >
                     <h2>Showcase the country you visited!</h2>
                     <select
+                        class="select"
                         bind:value={selectedCountry}
                         on:change={handleCountryChange}
                     >
@@ -91,15 +92,23 @@
                     </select>
 
                     <div class="modal-buttons">
-                        <Button class="w-fit" on:click={closeModal}>
-                            <div class="w-6 h-6 ms-2 text-white">Close</div>
-                        </Button>
-                        <Button class="w-fit" on:click={addCard}>
-                            <div class="w-6 h-6 ms-2 text-white">OK</div>
-                        </Button>
+                        <button
+                            type="button"
+                            class="btn variant-filled-surface"
+                            on:click={closeModal}
+                        >
+                            <div class="">Close</div>
+                        </button>
+                        <button
+                            type="button"
+                            class="btn variant-filled-surface"
+                            on:click={addCard}
+                        >
+                            <div class="">OK</div>
+                        </button>
                     </div>
                 </div>
-            </Card>
+            </div>
         </div>
     {/if}
 </div>
