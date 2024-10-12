@@ -2,6 +2,7 @@ import type { Config } from 'tailwindcss';
 import { join } from 'path';
 import flowbitePlugin from 'flowbite/plugin'
 
+import forms from "@tailwindcss/forms";
 import { skeleton } from '@skeletonlabs/tw-plugin';
 
 const config = {
@@ -38,6 +39,7 @@ const config = {
         skeleton({
             themes: { preset: ["wintry"] }
         }),
+        forms,
     ]
 } satisfies Config;
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { Card, Button } from "flowbite-svelte";
     import { PlusOutline, MinusOutline } from "flowbite-svelte-icons";
 
     export let key: string = "";
@@ -9,21 +8,33 @@
 </script>
 
 {#if isPlaceholder}
-    <Card size="md" class="items-center">
+    <div class="card p-6 w-3/5 max-w-[600px] h-fit flex flex-col items-center">
         <p
-            class="mb-3 font-normal text-gray-700 dark:text-gray-400 leading-tight"
+            class="mb-4 font-normal text-gray-700 dark:text-gray-400 leading-tight"
         >
             Add a country
         </p>
-        <Button class="w-fit" on:click={onOpenCountryPicker}>
-            <PlusOutline class="w-6 h-6 ms-2 text-white" />
-        </Button>
-    </Card>
+        <button
+            type="button"
+            class="btn-icon variant-filled-surface"
+            on:click={onOpenCountryPicker}
+        >
+            <PlusOutline class="" />
+        </button>
+    </div>
 {:else}
-    <Card size="md" class="items-center">
-        <p>{key}</p>
-        <Button class="w-fit" on:click={() => onDeleteCard(key)}>
-            <MinusOutline class="w-6 h-6 ms-2 text-white" />
-        </Button>
-    </Card>
+    <div class="card p-6 w-3/5 max-w-[600px] h-fit flex flex-col items-center">
+        <p
+            class="mb-4 font-normal text-gray-700 dark:text-gray-400 leading-tight"
+        >
+            {key}
+        </p>
+        <button
+            type="button"
+            class="btn-icon variant-filled-surface"
+            on:click={() => onDeleteCard(key)}
+        >
+            <MinusOutline class="" />
+        </button>
+    </div>
 {/if}
