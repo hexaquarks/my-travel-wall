@@ -1,9 +1,19 @@
 import type { Config } from 'tailwindcss';
+import { join } from 'path';
 import flowbitePlugin from 'flowbite/plugin'
 
-export default {
-    content: ['./src/**/*.{html,js,svelte,ts}', './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'],
-    darkMode: 'selector',
+import { skeleton } from '@skeletonlabs/tw-plugin';
+
+const config = {
+    darkMode: 'class',
+    content: [
+        './src/**/*.{html,js,svelte,ts}',
+        join(require.resolve(
+            '@skeletonlabs/skeleton'),
+            '../**/*.{html,js,svelte,ts}'
+        ),
+        './node_modules/flowbite-svelte/**/*.{html,js,svelte,ts}'
+    ],
     theme: {
         extend: {
             colors: {
@@ -23,5 +33,12 @@ export default {
             }
         }
     },
-    plugins: [flowbitePlugin]
-} as Config;
+    plugins: [
+        flowbitePlugin,
+        skeleton({
+            themes: { preset: ["wintry"] }
+        }),
+    ]
+} satisfies Config;
+
+export default config;
