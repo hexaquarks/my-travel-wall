@@ -8,6 +8,9 @@
     } from "@skeletonlabs/skeleton";
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import type { ModalSettings } from "@skeletonlabs/skeleton";
+    import type { PageData } from "../$types";
+
+    export let data: PageData;
 
     initializeStores();
     const modalStore = getModalStore();
@@ -25,6 +28,10 @@
             title: "Showcase the country you visited!",
             component: {
                 ref: CountryPickerModal,
+                props: {
+                    // @ts-ignore
+                    countries: data.countryListAPIResponse,
+                },
             },
             response: (selectedCountry: string) => {
                 if (selectedCountry) {
@@ -49,6 +56,7 @@
 
 <div class="w-screen h-full mt-5 flex flex-col gap-5 items-center">
     <Modal />
+
     {#each countryCards as card (card.id)}
         <CountryCard
             key={card.id}
