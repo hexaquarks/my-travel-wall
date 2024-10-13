@@ -1,22 +1,14 @@
 <script lang="ts">
     import { getModalStore } from "@skeletonlabs/skeleton";
-    import { onMount } from "svelte";
-    import { fetchCountries } from "$lib/util/CountrySelectionService.svelte";
+
     const modalStore = getModalStore();
 
-    let countries: Array<string> = [];
+    export let countries: Array<String> = [];
     let selectedCountry: string = "";
 
-    onMount(async () => {
-        try {
-            countries = await fetchCountries();
-        } catch (error) {
-            console.error("Error fetching countries:", error);
-        }
-    });
-
-    const handleCountryChange = (event: any) => {
-        selectedCountry = event.target.value;
+    const handleCountryChange = (event: Event) => {
+        const target = event.target as HTMLSelectElement;
+        selectedCountry = target.value;
     };
 
     const closeModal = () => {
@@ -50,7 +42,7 @@
                     <option>Loading countries...</option>
                 {/if}
                 {#each countries as country}
-                    <option value={country}>{country}</option>
+                    <option value={country.name}>{country.name}</option>
                 {/each}
             </select>
         </div>
