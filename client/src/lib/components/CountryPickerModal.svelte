@@ -1,10 +1,23 @@
 <script lang="ts">
     import { getModalStore } from "@skeletonlabs/skeleton";
+    import { onMount } from "svelte";
+    import { fetchCountries } from "$lib/util/CountrySelectionService.svelte";
     const modalStore = getModalStore();
 
-    export let countries: Array<string> = [];
-    export let selectedCountry: string = "";
-    export let handleCountryChange: (event: any) => void;
+    let countries: Array<string> = [];
+    let selectedCountry: string = "";
+
+    onMount(async () => {
+        try {
+            countries = await fetchCountries();
+        } catch (error) {
+            console.error("Error fetching countries:", error);
+        }
+    });
+
+    const handleCountryChange = (event: any) => {
+        selectedCountry = event.target.value;
+    };
 
     const closeModal = () => {
         modalStore.close();
@@ -17,7 +30,6 @@
         modalStore.close();
     };
 
-    // Base Classes (from Skeleton UI)
     const cBase = "card p-4 w-modal shadow-xl space-y-4";
     const cHeader = "text-2xl font-bold";
     const cFooter = "flex justify-end space-x-2";
