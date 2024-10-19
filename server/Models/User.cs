@@ -1,7 +1,8 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace UserDataApi.Models;
+/* namespace UserDataApi.Models; */
+namespace IdentityMongo.Models;
 
 public class User
 {
