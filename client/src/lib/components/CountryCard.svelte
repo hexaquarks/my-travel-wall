@@ -20,6 +20,13 @@
         isExpanded = !isExpanded;
     };
 
+    const isCardExpandable = (): boolean => {
+        // Back visible fields. TODO: Make a more scalabale function here.
+        return (
+            cardData.pictures?.length != 0 || cardData.description?.length != 0
+        );
+    };
+
     const formatDate = (dateStr: string | undefined) => {
         if (!dateStr) return "";
         const date = new Date(dateStr);
@@ -66,18 +73,20 @@
                 >
                     <MinusOutline />
                 </button>
-                <button
-                    type="button"
-                    class="btn-icon variant-filled-surface"
-                    on:click={toggleExpand}
-                    aria-expanded={isExpanded}
-                >
-                    {#if isExpanded}
-                        <ChevronUpOutline />
-                    {:else}
-                        <ChevronDownOutline />
-                    {/if}
-                </button>
+                {#if isCardExpandable()}
+                    <button
+                        type="button"
+                        class="btn-icon variant-filled-surface"
+                        on:click={toggleExpand}
+                        aria-expanded={isExpanded}
+                    >
+                        {#if isExpanded}
+                            <ChevronUpOutline />
+                        {:else}
+                            <ChevronDownOutline />
+                        {/if}
+                    </button>
+                {/if}
             </div>
         </div>
         {#if isExpanded}
