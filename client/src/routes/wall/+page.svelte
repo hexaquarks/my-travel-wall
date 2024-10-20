@@ -9,20 +9,15 @@
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { PageData } from "../$types";
+    import type {
+        CountryCardType,
+        CountryCardFormData,
+    } from "$lib/types/types";
 
     export let data: PageData;
 
     initializeStores();
     const modalStore = getModalStore();
-
-    type CountryCardType = {
-        id: string;
-        country: string;
-        startDate?: string;
-        endDate?: string;
-        pictures?: Array<File>;
-        description?: string;
-    };
 
     let countryCards: CountryCardType[] = [];
 
@@ -37,13 +32,7 @@
                     countries: data.countryListAPIResponse,
                 },
             },
-            response: (countryPickerData: {
-                country: string;
-                startDate?: string;
-                endDate?: string;
-                pictures?: Array<File>;
-                description?: string;
-            }) => {
+            response: (countryPickerData: CountryCardFormData) => {
                 if (countryPickerData) {
                     addCard(countryPickerData);
                 }
@@ -52,13 +41,7 @@
         modalStore.trigger(modalSettings);
     };
 
-    const addCard = (formData: {
-        country: string;
-        startDate?: string;
-        endDate?: string;
-        pictures?: Array<File>;
-        description?: string;
-    }) => {
+    const addCard = (formData: CountryCardFormData) => {
         const newCard: CountryCardType = { id: uuid(), ...formData };
         countryCards = [...countryCards, newCard];
     };

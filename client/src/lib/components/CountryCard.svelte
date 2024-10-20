@@ -5,18 +5,14 @@
         ChevronDownOutline,
         ChevronUpOutline,
     } from "flowbite-svelte-icons";
+    import { slide } from "svelte/transition";
+    import type { CountryCardFormData } from "$lib/types/types";
 
     export let key: string = "";
     export let isPlaceholder: boolean;
     export let onOpenCountryPicker: () => void;
     export let onDeleteCard: (id: string) => void;
-    export let cardData: {
-        country: string;
-        startDate?: string;
-        endDate?: string;
-        pictures?: Array<File>;
-        description?: string;
-    } = {};
+    export let cardData: CountryCardFormData = { country: "" };
 
     let isExpanded = false;
 
@@ -85,7 +81,10 @@
             </div>
         </div>
         {#if isExpanded}
-            <div transition:slide class="mt-4 space-y-4">
+            <div
+                transition:slide={{ delay: 0, duration: 250 }}
+                class="mt-4 space-y-4"
+            >
                 {#if cardData.description}
                     <p class="text-gray-700">{cardData.description}</p>
                 {/if}
