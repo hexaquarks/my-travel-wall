@@ -10,9 +10,12 @@
     let pictures: Array<File> = [];
     let description: string = "";
 
+    let countryError: boolean = false;
+
     const handleCountryChange = (event: Event) => {
         const target = event.target as HTMLSelectElement;
         selectedCountry = target.value;
+        countryError = false;
     };
 
     const handleStartDateChange = (event: Event) => {
@@ -37,6 +40,10 @@
     };
 
     const confirmSelection = () => {
+        if (!selectedCountry) {
+            countryError = true;
+            return;
+        }
         if ($modalStore[0]?.response) {
             $modalStore[0].response({
                 country: selectedCountry,
@@ -62,12 +69,14 @@
         <div class="space-y-4">
             <!-- Country Selection (Required) -->
             <div>
-                <label for="country" class="block text-sm font-medium"
-                    >Country <span class="text-red-500">*</span></label
-                >
+                <label for="country" class="block text-sm font-medium">
+                    Country <span class="text-red-500">*</span>
+                </label>
                 <select
                     id="country"
-                    class="select w-full mt-1"
+                    class="select w-full mt-1 {countryError
+                        ? 'input-error'
+                        : ''} variant-form-material"
                     bind:value={selectedCountry}
                     on:change={handleCountryChange}
                     required
@@ -83,32 +92,35 @@
                         {/each}
                     {/if}
                 </select>
+                {#if countryError}
+                    <p class="text-red-500 text-sm mt-1">
+                        Please select a country.
+                    </p>
+                {/if}
             </div>
 
             <!-- Date Selection (Optional) -->
             <div class="flex space-x-4">
                 <div class="flex-1">
-                    <label for="start-date" class="block text-sm font-medium"
-                        >Start Date <span class="text-gray-500">(optional)</span
-                        ></label
-                    >
+                    <label for="start-date" class="block text-sm font-medium">
+                        Start Date <span class="text-gray-500">(optional)</span>
+                    </label>
                     <input
                         id="start-date"
                         type="date"
-                        class="input w-full mt-1"
+                        class="input w-full mt-1 variant-form-material"
                         bind:value={selectedStartDate}
                         on:change={handleStartDateChange}
                     />
                 </div>
                 <div class="flex-1">
-                    <label for="end-date" class="block text-sm font-medium"
-                        >End Date <span class="text-gray-500">(optional)</span
-                        ></label
-                    >
+                    <label for="end-date" class="block text-sm font-medium">
+                        End Date <span class="text-gray-500">(optional)</span>
+                    </label>
                     <input
                         id="end-date"
                         type="date"
-                        class="input w-full mt-1"
+                        class="input w-full mt-1 variant-form-material"
                         bind:value={selectedEndDate}
                         on:change={handleEndDateChange}
                     />
@@ -117,19 +129,14 @@
 
             <!-- Pictures Upload (Optional) -->
             <div>
-                <label for="pictures" class="block text-sm font-medium"
-                    >Pictures <span class="text-gray-500">(optional)</span
-                    ></label
-                >
-                <!-- <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]"> -->
-                <!-- 	<input type="search" placeholder="Search..." /> -->
-                <!-- 	<button class="variant-filled-secondary">Submit</button> -->
-                <!-- </div> -->
+                <label for="pictures" class="block text-sm font-medium">
+                    Pictures <span class="text-gray-500">(optional)</span>
+                </label>
                 <div class="mt-1">
                     <input
                         id="pictures"
                         type="file"
-                        class="file-input w-full pl-5"
+                        class="file-input w-full pl-5 variant-form-material"
                         multiple
                         on:change={handlePicturesChange}
                     />
@@ -138,13 +145,12 @@
 
             <!-- Description (Optional) -->
             <div>
-                <label for="description" class="block text-sm font-medium"
-                    >Description <span class="text-gray-500">(optional)</span
-                    ></label
-                >
+                <label for="description" class="block text-sm font-medium">
+                    Description <span class="text-gray-500">(optional)</span>
+                </label>
                 <textarea
                     id="description"
-                    class="textarea w-full mt-1"
+                    class="textarea w-full mt-1 variant-form-material"
                     rows="2"
                     bind:value={description}
                     placeholder="Share your experiences from this trip..."
