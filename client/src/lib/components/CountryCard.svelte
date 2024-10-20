@@ -53,7 +53,7 @@
                     <p class="text-sm text-gray-500">
                         {formatDate(cardData.startDate)}
                         {cardData.endDate
-                            ? `- ${formatDate(cardData.endDate)}`
+                            ? `⟶ ${formatDate(cardData.endDate)}`
                             : ""}
                     </p>
                 {/if}
@@ -86,7 +86,9 @@
                 class="mt-4 space-y-4"
             >
                 {#if cardData.description}
-                    <p class="text-gray-700">{cardData.description}</p>
+                    <p class="text-gray-700 dark:text-gray-400">
+                        {cardData.description}
+                    </p>
                 {/if}
                 {#if cardData.pictures && cardData.pictures.length > 0}
                     <div
