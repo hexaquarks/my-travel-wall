@@ -1,28 +1,45 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using System.ComponentModel.DataAnnotations;
 
-/* namespace UserDataApi.Models; */
-namespace IdentityMongo.Models;
-
-public class User
+namespace IdentityMongo.Models
 {
-    [BsonId] // Annotation to set this property as the document's primary key
-    [BsonRepresentation(BsonType.ObjectId)] // Allows passing as string instead of ObjectId. MongoDB handles conversions
-    public string? Id { get; set; }
+    public class User
+    {
+        [Required]
+        public string Name { get; set; }
 
-    [BsonElement("Name")]
-    public string UserName { get; set; } = null!;
+        [Required]
+        [EmailAddress(ErrorMessage = "Invalid Email")]
+        public string Email { get; set; }
 
-    public string Country { get; set; } = null!;
+        [Required]
+        public string Password { get; set; }
+    }
 }
-
-// This class is used to store the appsettings.json's database properties.
-// They are named the same to ease the mapping process.
-public class UserDataDatabaseSettings
-{
-    public string ConnectionString { get; set; } = null!;
-
-    public string DatabaseName { get; set; } = null!;
-
-    public string UsersCollectionName { get; set; } = null!;
-}
+/* using MongoDB.Bson; */
+/* using MongoDB.Bson.Serialization.Attributes; */
+/**/
+/* /* namespace UserDataApi.Models; */
+/* namespace IdentityMongo.Models; */
+/**/
+/* public class User */
+/* { */
+/*     [BsonId] // Annotation to set this property as the document's primary key */
+/*     [BsonRepresentation(BsonType.ObjectId)] // Allows passing as string instead of ObjectId. MongoDB handles conversions */
+/*     public string? Id { get; set; } */
+/**/
+/*     [BsonElement("Name")] */
+/*     public string UserName { get; set; } = null!; */
+/**/
+/*     public string Country { get; set; } = null!; */
+/* } */
+/**/
+/* // This class is used to store the appsettings.json's database properties. */
+/* // They are named the same to ease the mapping process. */
+/* public class UserDataDatabaseSettings */
+/* { */
+/*     public string ConnectionString { get; set; } = null!; */
+/**/
+/*     public string DatabaseName { get; set; } = null!; */
+/**/
+/*     public string UsersCollectionName { get; set; } = null!; */
+/* } */
