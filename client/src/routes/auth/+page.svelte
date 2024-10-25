@@ -1,61 +1,120 @@
-<script>
+<!-- src/routes/+page.svelte -->
+<script lang="ts">
+    console.log("once");
     import { page } from "$app/stores";
-    import { Input, Label } from "flowbite-svelte";
-    // import { get } from "svelte/store";
-    // $: Note: reactive declaration this will make the component rerender if it changes.
-    $: mode = $page.url.searchParams.get("mode") || "signin";
+    import type { PageData } from "./$types";
+
+    export let data: PageData;
+
+    let mode = $page.url.searchParams.get("mode") || "signin";
+
+    // @ts-ignore
+    let name = data.name || "";
+    // @ts-ignore
+    let email = data.email || "";
+    let password = "";
+    let confirm_password = "";
+
+    // Extract errors from the form data
+    // @ts-ignore
+    const errors = data.errors || {};
 </script>
 
-{#if mode === "signin"}
-    <div class="m-auto space-y-1 w-full max-w-lg items-center">
-        <h1 class="text-2xl font-bold mb-8 mt-8">Sign In</h1>
-        <p>email</p>
-        <div class="input-group input-group-divider grid-cols-[1fr_auto]">
-            <input type="text" placeholder="Enter your email..." />
-        </div>
-        <p class="pt-5">password</p>
-        <div class="input-group input-group-divider grid-cols-[1fr_auto]">
-            <input type="text" placeholder="Enter your password..." />
-        </div>
-        <div class="pt-5">
-            <button type="button" class="btn variant-filled-surface"
-                >Sign In</button
-            >
-            <p class="mt-2 text-sm">
-                Don't have an account? <a
-                    href="/auth?mode=signup"
-                    class="text-blue-600 hover:underline">Sign Up</a
-                >
-            </p>
-        </div>
-    </div>
-{/if}
-
 {#if mode === "signup"}
-    <div class="m-auto space-y-1 w-full max-w-lg items-center">
-        <h1 class="text-2xl font-bold mb-8 mt-8">Sign Up</h1>
-        <p>email</p>
-        <div class="input-group input-group-divider grid-cols-[1fr_auto]">
-            <input type="text" placeholder="Enter your email..." />
+    <form
+        method="POST"
+        action="?/register"
+        class="max-w-lg mx-auto mt-8 space-y-6"
+    >
+        <h1 class="text-2xl font-bold">Sign Up</h1>
+
+        <!-- Name Field -->
+        <div>
+            <label for="name" class="block text-sm font-medium">Name</label>
+            <input
+                id="name"
+                name="name"
+                type="text"
+                class="mt-1 input w-full {errors.name ? 'input-error' : ''}"
+                value={name}
+                required
+            />
+            {#if errors.name}
+                <p class="text-red-500 text-sm mt-1">{errors.name}</p>
+            {/if}
         </div>
-        <p class="pt-5">password</p>
-        <div class="input-group input-group-divider grid-cols-[1fr_auto]">
-            <input type="text" placeholder="Enter your password..." />
+
+        <!-- Email Field -->
+        <div>
+            <label for="email" class="block text-sm font-medium">Email</label>
+            <input
+                id="email"
+                name="email"
+                type="email"
+                class="mt-1 input w-full {errors.email ? 'input-error' : ''}"
+                value={email}
+                required
+            />
+            {#if errors.email}
+                <p class="text-red-500 text-sm mt-1">{errors.email}</p>
+            {/if}
         </div>
-        <p class="pt-5">confirm password</p>
-        <div class="input-group input-group-divider grid-cols-[1fr_auto]">
-            <input type="text" placeholder="Confirm your password..." />
+
+        <!-- Password Field -->
+        <div>
+            <label for="password" class="block text-sm font-medium"
+                >Password</label
+            >
+            <input
+                id="password"
+                name="password"
+                type="password"
+                class="mt-1 input w-full {errors.password ? 'input-error' : ''}"
+                required
+            />
+            {#if errors.password}
+                <p class="text-red-500 text-sm mt-1">{errors.password}</p>
+            {/if}
         </div>
-        <div class="pt-5">
-            <button type="button" class="btn variant-filled-surface"
+
+        <!-- Confirm Password Field -->
+        <div>
+            <label for="confirm_password" class="block text-sm font-medium"
+                >Confirm Password</label
+            >
+            <input
+                id="confirm_password"
+                name="confirm_password"
+                type="password"
+                class="mt-1 input w-full {errors.confirm_password
+                    ? 'input-error'
+                    : ''}"
+                required
+            />
+            {#if errors.confirm_password}
+                <p class="text-red-500 text-sm mt-1">
+                    {errors.confirm_password}
+                </p>
+            {/if}
+        </div>
+
+        <!-- General Error -->
+        {#if errors.general}
+            <div class="alert alert-error mt-4">{errors.general}</div>
+        {/if}
+
+        <!-- Submit Button -->
+        <div>
+            <button type="submit" class="btn variant-filled-primary w-full"
                 >Sign Up</button
             >
-            <p class="mt-2 text-sm">
-                Already have an account? <a
+            <p class="mt-2 text-sm text-center">
+                Already have an account?
+                <a
                     href="/auth?mode=signin"
-                    class="text-blue-600 hover:underline">Sign Up</a
+                    class="text-blue-600 hover:underline">Sign In</a
                 >
             </p>
         </div>
-    </div>
+    </form>
 {/if}
