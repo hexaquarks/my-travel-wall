@@ -1,10 +1,10 @@
 <script>
-    function authenticate() {
-        window.location.href = "/auth";
-    }
+    // function authenticate() {
+    //     window.location.href = "/auth";
+    // }
 </script>
 
-<button on:click={() => authenticate()} />
+<!-- <button on:click={() => authenticate()} /> -->
 
 <h1>Welcome to SvelteKit</h1>
 <p>

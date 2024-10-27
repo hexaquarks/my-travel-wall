@@ -1,25 +1,43 @@
-using UserDataApi.Models;
-using UserDataApi.Services;
-/* using UserDataApi.Controllers; */
+using IdentityMongo.Settings;
+using IdentityMongo.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
+var mongoDbSettings = builder.Configuration.GetSection(nameof(MongoDbConfig)).Get<MongoDbConfig>();
 
-builder.Services.Configure<UserDataDatabaseSettings>(
-    builder.Configuration.GetSection("UserDataDatabase"));
-builder.Services.AddSingleton<UsersService>();
+builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
+        .AddMongoDbStores<ApplicationUser, ApplicationRole, Guid>
+        (
+            mongoDbSettings.ConnectionString, mongoDbSettings.Name
+        );
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/account/login";
+    options.LogoutPath = "/account/logout";
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+});
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Only map API endpoint
 app.UseRouting();
-/* app.UseAuthorization(); */
+app.UseCors("AllowAllOrigins");
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
-/* app.UseEndpoints(endpoints => */
-/* { */
-/*     endpoints.MapControllers(); */
-/* }); */
 
 app.Run();

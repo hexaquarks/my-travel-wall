@@ -26,7 +26,6 @@ export const load: PageServerLoad = async () => {
 
         const countries = await response.json();
         countriesCache = countries; // TODO: Damn data from +page.server.ts is cached by default actually! 
-        console.log("mhm");
 
         return {
             countryListAPIResponse: countries

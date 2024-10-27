@@ -22,8 +22,8 @@
             <LightSwitch />
             <NavLi href="/">Home</NavLi>
             <NavLi href="/wall">Build Wall</NavLi>
-            <NavLi href="/auth?mode=signin">Sign In</NavLi>
-            <NavLi href="/auth?mode=signup">Sign Up</NavLi>
+            <NavLi href="/login">Login</NavLi>
+            <NavLi href="/register">Register</NavLi>
         </NavUl>
     </Navbar>
 </slot>
