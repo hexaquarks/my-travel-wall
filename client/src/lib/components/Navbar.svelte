@@ -7,6 +7,8 @@
         NavLi,
     } from "flowbite-svelte";
     import { LightSwitch } from "@skeletonlabs/skeleton";
+
+    export let user;
 </script>
 
 <slot>
@@ -22,6 +24,9 @@
             <LightSwitch />
             <NavLi href="/">Home</NavLi>
             <NavLi href="/wall">Build Wall</NavLi>
+            {#if user}
+                <NavLi href="/register">LogOut</NavLi>
+            {/if}
             <NavLi href="/login">Login</NavLi>
             <NavLi href="/register">Register</NavLi>
         </NavUl>

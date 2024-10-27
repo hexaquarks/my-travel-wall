@@ -2,6 +2,8 @@ using IdentityMongo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace IdentityMongo.Controllers
 {
@@ -17,6 +19,36 @@ namespace IdentityMongo.Controllers
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        {
+            if (ModelState.IsValid)
+            {
+                // Retrieve the user by email
+                var user = await userManager.FindByEmailAsync(login.Email);
+
+                if (user == null)
+                {
+                    return Unauthorized("Invalid credentials");
+                }
+
+                // Sign in the user using PasswordSignInAsync
+                var result = await signInManager.PasswordSignInAsync(user, login.Password, isPersistent: false, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    Console.WriteLine("logged in successfully");
+                    return Ok(new { message = "Logged in successfully" });
+                }
+                else
+                {
+                    return Unauthorized("Invalid credentials");
+                }
+            }
+
+            return BadRequest();
         }
 
         [AllowAnonymous]
@@ -63,10 +95,11 @@ namespace IdentityMongo.Controllers
             return Ok(new { message = "Logout successful" });
         }
 
-        [Authorize]
+        [AllowAnonymous]
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentUser()
         {
+            Console.WriteLine("in ME endpoint");
             var user = await userManager.GetUserAsync(User);
             if (user != null)
             {

@@ -5,7 +5,7 @@
     export let form: ActionData & LoginFormFields;
 </script>
 
-<form method="post" action="?/login" class="max-w-lg mx-auto mt-8 space-y-6">
+<form method="POST" class="max-w-lg mx-auto mt-8 space-y-6">
     <h1 class="text-2xl font-bold">sign in</h1>
 
     <!-- Email Field -->

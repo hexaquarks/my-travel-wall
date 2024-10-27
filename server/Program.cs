@@ -11,12 +11,14 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
             mongoDbSettings.ConnectionString, mongoDbSettings.Name
         );
 
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/account/login";
     options.LogoutPath = "/account/logout";
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
 builder.Services.AddCors(options =>

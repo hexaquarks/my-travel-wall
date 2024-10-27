@@ -5,7 +5,7 @@
     export let form: ActionData & RegistrationFormFields;
 </script>
 
-<form method="post" action="?/register" class="max-w-lg mx-auto mt-8 space-y-6">
+<form method="POST" class="max-w-lg mx-auto mt-8 space-y-6">
     <h1 class="text-2xl font-bold">sign up</h1>
 
     <!-- name field -->

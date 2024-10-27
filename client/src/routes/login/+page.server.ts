@@ -26,7 +26,7 @@ function populateErrorMessagesRecievedFromBackend(
 }
 
 export const actions = {
-    register: async ({ request }) => {
+    default: async ({ request }) => {
         const data = await request.formData();
         const email = data.get('email')?.toString() ?? '';
         const password = data.get('password')?.toString() ?? '';
@@ -38,17 +38,20 @@ export const actions = {
         const errors: LoginFormErrors = {};
 
         try {
-            const response = await fetch('http://localhost:5072/account/register', {
+            const response = await fetch('http://localhost:5072/account/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
                 credentials: 'include'
             });
 
+            console.log(`login response status ${response.ok}`)
+
             if (!response.ok) {
                 const errorData = await response.json();
 
                 populateErrorMessagesRecievedFromBackend(errorData, errors);
+                console.log(errors);
 
                 return fail(response.status, {
                     ...formValues,
@@ -62,14 +65,16 @@ export const actions = {
                     errors
                 });
             }
+            console.log("login successsful in frontend");
 
-            // TODO :Registration and sign-in successful
-            throw redirect(303, '/');
         } catch (error) {
             return fail(500, {
                 ...formValues,
                 errors: { general: ['Server error during registration.'] }
             });
         }
+
+        // TODO :Registration and sign-in successful
+        redirect(303, '/');
     }
 } satisfies Actions;

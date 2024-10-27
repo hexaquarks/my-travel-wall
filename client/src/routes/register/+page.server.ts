@@ -29,7 +29,7 @@ function populateErrorMessagesRecievedFromBackend(
 }
 
 export const actions = {
-    register: async ({ request }) => {
+    default: async ({ request }) => {
         const data = await request.formData();
         const name = data.get('name')?.toString() ?? '';
         const email = data.get('email')?.toString() ?? '';
@@ -83,13 +83,14 @@ export const actions = {
                 });
             }
 
-            // TODO :Registration and sign-in successful
-            throw redirect(303, '/');
         } catch (error) {
             return fail(500, {
                 ...formValues,
                 errors: { general: ['Server error during registration.'] }
             });
         }
+
+        // TODO :Registration and sign-in successful
+        throw redirect(303, '/');
     }
 } satisfies Actions;
