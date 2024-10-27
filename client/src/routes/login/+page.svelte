@@ -1,74 +1,77 @@
 <script lang="ts">
-    import type { PageData } from "./$types";
+    import type { LoginFormFields } from "$lib/types/types.ts";
+    import type { ActionData } from "./$types";
 
-    export let data: PageData;
-    // @ts-ignore
-    let name = data.name || "";
-    // @ts-ignore
-    let email = data.email || "";
-    let password = "";
-    let confirm_password = "";
-
-    // Extract errors from the form data
-    // @ts-ignore /
-    const errors = data.errors || {};
+    export let form: ActionData & LoginFormFields;
 </script>
 
-<form method="POST" action="?/login">
-    <div class="m-auto space-y-1 w-full max-w-lg items-center">
-        <h1 class="text-2xl font-bold mb-8 mt-8">Sign In</h1>
+<form method="post" action="?/login" class="max-w-lg mx-auto mt-8 space-y-6">
+    <h1 class="text-2xl font-bold">sign in</h1>
 
-        <!-- Email Field -->
-        <div>
-            <label for="email" class="block text-sm font-medium">Email</label>
-            <input
-                id="email"
-                type="email"
-                name="email"
-                placeholder="Enter your email..."
-                class="input w-full {errors.email ? 'input-error' : ''}"
-                value={email}
-                required
-            />
-            {#if errors.email}
-                <p class="text-red-500 text-sm mt-1">{errors.email}</p>
-            {/if}
-        </div>
-
-        <!-- Password Field -->
-        <div>
-            <label for="password" class="block text-sm font-medium"
-                >Password</label
-            >
-            <input
-                id="password"
-                type="password"
-                name="password"
-                placeholder="Enter your password..."
-                class="input w-full {errors.password ? 'input-error' : ''}"
-                required
-            />
-            {#if errors.password}
-                <p class="text-red-500 text-sm mt-1">{errors.password}</p>
-            {/if}
-        </div>
-
-        <!-- General Error -->
-        {#if errors.general}
-            <div class="alert alert-error mt-4">{errors.general}</div>
+    <!-- Email Field -->
+    <div>
+        <label for="email" class="block text-sm font-medium">Email</label>
+        <input
+            id="email"
+            name="email"
+            type="email"
+            class="mt-1 input w-full {form?.errors?.email ? 'input-error' : ''}"
+            value={form?.email ?? ""}
+            required
+        />
+        {#if form?.errors?.email}
+            <div>
+                {#each form?.errors?.email as err}
+                    <p class="text-red-500 text-sm mt-1">
+                        {err ?? ""}
+                    </p>
+                {/each}
+            </div>
         {/if}
+    </div>
 
-        <!-- Submit Button -->
-        <div class="pt-5">
-            <button type="submit" class="btn variant-filled-surface">
-                Sign In
-            </button>
-            <p class="mt-2 text-sm">
-                Don't have an account?
-                <a href="/?register" class="text-blue-600 hover:underline"
-                    >Sign Up</a
-                >
-            </p>
+    <!-- Password Field -->
+    <div>
+        <label for="password" class="block text-sm font-medium">Password</label>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            class="mt-1 input w-full {form?.errors?.password
+                ? 'input-error'
+                : ''}"
+            required
+        />
+        {#if form?.errors?.password}
+            <div>
+                {#each form?.errors?.password as err}
+                    <p class="text-red-500 text-sm mt-1">
+                        {err ?? ""}
+                    </p>
+                {/each}
+            </div>
+        {/if}
+    </div>
+
+    <!-- General Error -->
+    {#if form?.errors?.general}
+        <div>
+            {#each form?.errors?.general as err}
+                <div class="alert alert-error mt-4">{err ?? ""}</div>
+            {/each}
         </div>
+    {/if}
+
+    <!-- Submit Button -->
+    <div>
+        <button type="submit" class="btn variant-filled-primary w-full">
+            Sign In
+        </button>
+        <p class="mt-2 text-sm text-center">
+            Don't have an account yet?
+            <a href="?/register" class="text-blue-600 hover:underline"
+                >Sign Up</a
+            >
+        </p>
     </div>
 </form>

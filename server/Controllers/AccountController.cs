@@ -23,7 +23,6 @@ namespace IdentityMongo.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
-            Console.WriteLine("Trying to register");
             if (ModelState.IsValid)
             {
                 ApplicationUser appUser = new ApplicationUser
@@ -36,15 +35,12 @@ namespace IdentityMongo.Controllers
 
                 if (result.Succeeded)
                 {
-                    Console.WriteLine("Success");
-
                     // Sign in the user after registration
                     await signInManager.SignInAsync(appUser, isPersistent: false);
                     return Ok(new { message = "User registered successfully" });
                 }
                 else
                 {
-                    Console.WriteLine("Registration failed with errors:");
                     // Return errors with field references
                     var errors = result.Errors.Select(error => new
                     {
@@ -52,24 +48,11 @@ namespace IdentityMongo.Controllers
                         Message = error.Description
                     });
 
-                    foreach (var error in errors)
-                    {
-                        Console.WriteLine($"Field: {error.Field}, Message: {error.Message}");
-                    }
-
                     return BadRequest(errors);
                 }
             }
 
-            Console.WriteLine("Model is invalid");
-            var modelErrors = ModelState.Where(kvp => kvp.Value.Errors.Count > 0)
-                .Select(kvp => new
-                {
-                    Field = kvp.Key,
-                    Message = kvp.Value.Errors.First().ErrorMessage
-                });
-
-            return BadRequest(modelErrors);
+            return BadRequest();
         }
 
         [Authorize]

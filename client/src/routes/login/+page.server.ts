@@ -1,32 +1,44 @@
-
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
+import type { LoginFormFields, LoginFormErrors } from "$lib/types/types.js";
+
+// Contract established on the backend server.
+type ErrorField = "password" | "email" | "general";
+type BackendErrorStructure = { field: ErrorField; message: string }[];
+
+function populateErrorMessagesRecievedFromBackend(
+    errorData: BackendErrorStructure,
+    errors: LoginFormErrors) {
+    errorData.forEach((error) => {
+        switch (error.field) {
+            case "email":
+                (errors.email ??= []).push(error.message);
+                break;
+            case "password":
+                (errors.password ??= []).push(error.message);
+                break;
+            case "general":
+                (errors.general ??= []).push(error.message)
+            default:
+                break;
+        }
+    });
+}
 
 export const actions = {
-    login: async ({ request, cookies }) => {
+    register: async ({ request }) => {
         const data = await request.formData();
         const email = data.get('email')?.toString() ?? '';
         const password = data.get('password')?.toString() ?? '';
 
-        const formValues = { email }; // We won't include password for security reasons
-        const errors: Record<string, string> = {};
+        // The formValues that can have an error and might be brought
+        // back to the user.
+        const formValues = { email, password };
 
-        if (!email) {
-            errors.email = 'Email is required.';
-        }
-        if (!password) {
-            errors.password = 'Password is required.';
-        }
-
-        if (Object.keys(errors).length > 0) {
-            return fail(400, {
-                ...formValues,
-                errors
-            });
-        }
+        const errors: LoginFormErrors = {};
 
         try {
-            const response = await fetch('http://localhost:5072/account/login', {
+            const response = await fetch('http://localhost:5072/account/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
@@ -35,22 +47,28 @@ export const actions = {
 
             if (!response.ok) {
                 const errorData = await response.json();
+
+                populateErrorMessagesRecievedFromBackend(errorData, errors);
+
                 return fail(response.status, {
                     ...formValues,
-                    errors: { general: errorData.message }
+                    errors
                 });
             }
 
-            // Handle successful login (e.g., set cookies if necessary)
-            // cookies.set('sessionid', '...', { path: '/' });
+            if (Object.keys(errors).length > 0) {
+                return fail(400, {
+                    ...formValues,
+                    errors
+                });
+            }
 
-            // Redirect to the homepage after successful login
+            // TODO :Registration and sign-in successful
             throw redirect(303, '/');
         } catch (error) {
-            console.error(error);
             return fail(500, {
                 ...formValues,
-                errors: { general: 'Server error during login.' }
+                errors: { general: ['Server error during registration.'] }
             });
         }
     }

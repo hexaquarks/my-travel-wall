@@ -10,7 +10,6 @@ export type RegistrationFormErrors = {
     name?: Array<string>;
     email?: Array<string>;
     password?: Array<string>;
-    general?: Array<string>;
     confirmationPassword?: Array<string>;
 }
 
@@ -22,7 +21,18 @@ export type RegistrationFormFields = {
     errors?: RegistrationFormErrors;
 };
 
+export type LoginFormErrors = {
+    email?: Array<string>;
+    password?: Array<string>;
+    general?: Array<string>;
+}
+
 export type LoginFormFields = {
+    email: string;
+    password: string;
+    errors?: RegistrationFormErrors;
+};
+export type LoginFormsErrors = {
     email: string;
     password: string;
 };
