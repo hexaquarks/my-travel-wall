@@ -16,9 +16,15 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/account/login";
     options.LogoutPath = "/account/logout";
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.Domain = "localhost";
+    options.Cookie.Name = "authentication_cookie";
+    options.Cookie.SameSite = SameSiteMode.Lax;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+});
+
+builder.Services.AddAuthentication().AddCookie(options =>
+{
+    options.Cookie.Name = "authentication_cookie";
 });
 
 builder.Services.AddCors(options =>
@@ -26,7 +32,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAllOrigins",
         builder =>
         {
-            builder.AllowAnyOrigin()
+            builder.AllowCredentials()
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
