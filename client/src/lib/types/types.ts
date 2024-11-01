@@ -40,3 +40,13 @@ export type LoginFormsErrors = {
 export type CountryCardType = CountryCardFormData & {
     id: string;
 };
+
+export type WallMetaInfo = {
+    isPublic: boolean;
+    createdAt: string;
+};
+
+export type Wall = {
+    wallMetaInfo: WallMetaInfo;
+    countryCards: Array<CountryCardType>;
+}

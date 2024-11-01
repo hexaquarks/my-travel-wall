@@ -19,7 +19,8 @@
     initializeStores();
     const modalStore = getModalStore();
 
-    let countryCards: CountryCardType[] = [];
+    // @ts-ignore
+    let countryCards: CountryCardType[] = data.countryCards ?? [];
 
     const openModal = () => {
         const modalSettings: ModalSettings = {
