@@ -6,6 +6,5 @@ namespace IdentityMongo.Models
     [CollectionName("Roles")]
     public class ApplicationRole : MongoIdentityRole<Guid>
     {
-
     }
 }
