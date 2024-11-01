@@ -16,8 +16,9 @@
         <NavBrand href="/">
             <span
                 class="self-center whitespace-nowrap text-xl font-semibold dark:text-white"
-                >MyTravelWall</span
             >
+                MyTravelWall
+            </span>
         </NavBrand>
         <NavHamburger />
         <NavUl>
@@ -25,10 +26,15 @@
             <NavLi href="/">Home</NavLi>
             <NavLi href="/wall">Build Wall</NavLi>
             {#if user}
-                <NavLi href="/register">LogOut</NavLi>
+                <NavLi>
+                    <form method="POST" action="/logout" class="inline">
+                        <button type="submit">Logout</button>
+                    </form>
+                </NavLi>
+            {:else}
+                <NavLi href="/login">Login</NavLi>
+                <NavLi href="/register">Register</NavLi>
             {/if}
-            <NavLi href="/login">Login</NavLi>
-            <NavLi href="/register">Register</NavLi>
         </NavUl>
     </Navbar>
 </slot>

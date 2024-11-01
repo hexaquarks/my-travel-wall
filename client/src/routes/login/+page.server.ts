@@ -26,7 +26,7 @@ function populateErrorMessagesRecievedFromBackend(
 }
 
 export const actions = {
-    default: async ({ request }) => {
+    default: async ({ request, cookies }) => {
         const data = await request.formData();
         const email = data.get('email')?.toString() ?? '';
         const password = data.get('password')?.toString() ?? '';
@@ -65,6 +65,24 @@ export const actions = {
                     errors
                 });
             }
+
+            // Extract the 'Set-Cookie' header from the backend response
+            const setCookieHeader = response.headers.get('set-cookie');
+            console.log(`Set-Cookie header: ${setCookieHeader}`);
+
+            if (setCookieHeader) {
+                const cookieParts = setCookieHeader.split(';')[0];
+                const [cookieName, cookieValue] = cookieParts.split('=');
+
+                // Set the cookie in the SvelteKit
+                cookies.set(cookieName.trim(), cookieValue.trim(), {
+                    path: '/',
+                    httpOnly: true,
+                    sameSite: 'lax',
+                });
+                console.log("established cookies");
+            }
+
             console.log("login successsful in frontend");
 
         } catch (error) {

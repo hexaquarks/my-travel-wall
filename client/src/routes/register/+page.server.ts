@@ -82,7 +82,6 @@ export const actions = {
                     errors
                 });
             }
-
         } catch (error) {
             return fail(500, {
                 ...formValues,
