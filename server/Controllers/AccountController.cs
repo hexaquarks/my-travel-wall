@@ -2,6 +2,8 @@ using IdentityMongo.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace IdentityMongo.Controllers
 {
@@ -17,6 +19,39 @@ namespace IdentityMongo.Controllers
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginModel login)
+        {
+            if (ModelState.IsValid)
+            {
+                // Retrieve the user by email
+                var user = await userManager.FindByEmailAsync(login.Email);
+
+                if (user == null)
+                {
+                    Console.WriteLine("Login failed: Bad user credentials");
+                    return Unauthorized("Invalid credentials");
+                }
+
+                // Sign in the user using PasswordSignInAsync
+                var result = await signInManager.PasswordSignInAsync(user, login.Password, isPersistent: true, lockoutOnFailure: false);
+
+                if (result.Succeeded)
+                {
+                    Console.WriteLine("Login successful");
+                    return Ok(new { message = "Logged in successfully" });
+                }
+                else
+                {
+                    Console.WriteLine("Login failed: Bad password");
+                    return Unauthorized("Invalid credentials");
+                }
+            }
+
+            return BadRequest();
         }
 
         [AllowAnonymous]
@@ -37,6 +72,8 @@ namespace IdentityMongo.Controllers
                 {
                     // Sign in the user after registration
                     await signInManager.SignInAsync(appUser, isPersistent: false);
+
+                    Console.WriteLine("Successfuly registered a new user");
                     return Ok(new { message = "User registered successfully" });
                 }
                 else
@@ -48,6 +85,7 @@ namespace IdentityMongo.Controllers
                         Message = error.Description
                     });
 
+                    Console.WriteLine("user Registration has failed");
                     return BadRequest(errors);
                 }
             }
@@ -60,6 +98,7 @@ namespace IdentityMongo.Controllers
         public async Task<IActionResult> Logout()
         {
             await signInManager.SignOutAsync();
+            Console.WriteLine("User logged out from server");
             return Ok(new { message = "Logout successful" });
         }
 
@@ -70,6 +109,7 @@ namespace IdentityMongo.Controllers
             var user = await userManager.GetUserAsync(User);
             if (user != null)
             {
+                Console.WriteLine("Returning authenticated user's info");
                 return Ok(new
                 {
                     user.Id,
@@ -77,6 +117,8 @@ namespace IdentityMongo.Controllers
                     user.Email
                 });
             }
+
+            Console.WriteLine("A request for an unauthenticated user has been made");
             return NotFound();
         }
 
