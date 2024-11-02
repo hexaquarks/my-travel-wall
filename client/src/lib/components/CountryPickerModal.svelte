@@ -12,6 +12,16 @@
 
     let countryError: boolean = false;
 
+    function formatDateString(dateString: string) {
+        if (!dateString) return null;
+
+        var date = new Date(dateString);
+        if (isNaN(date.getTime())) {
+            return null;
+        }
+        return date.toISOString();
+    }
+
     const handleCountryChange = (event: Event) => {
         const target = event.target as HTMLSelectElement;
         selectedCountry = target.value;
@@ -45,10 +55,13 @@
             return;
         }
         if ($modalStore[0]?.response) {
+            var startDateFormatted = formatDateString(selectedStartDate);
+            var endDateFormatted = formatDateString(selectedEndDate);
+
             $modalStore[0].response({
                 country: selectedCountry,
-                startDate: selectedStartDate,
-                endDate: selectedEndDate,
+                startDate: startDateFormatted,
+                endDate: endDateFormatted,
                 pictures: pictures,
                 description: description,
             });

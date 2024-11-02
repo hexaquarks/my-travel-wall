@@ -8,19 +8,30 @@
     } from "@skeletonlabs/skeleton";
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import type { ModalSettings } from "@skeletonlabs/skeleton";
-    import type { PageData } from "../$types";
+    import type { PageData } from "./$types";
     import type {
         CountryCardType,
         CountryCardFormData,
+        WallServerLoadInfo,
+        WallType,
+        WallMetaInfo,
     } from "$lib/types/types";
 
-    export let data: PageData;
+    export let data: PageData & WallServerLoadInfo;
 
     initializeStores();
     const modalStore = getModalStore();
 
-    // @ts-ignore
-    let countryCards: CountryCardType[] = data.countryCards ?? [];
+    let countryCards: CountryCardType[] = data.wallInfo?.countryCards ?? [];
+    let wallMetaInfo: WallMetaInfo = data.wallInfo?.wallMetaInfo ?? {
+        isPublic: false,
+        createdAt: Date.now().toString(),
+    };
+    let date = new Date();
+    wallMetaInfo.createdAt = date.toISOString();
+
+    let countryListFromAPI: Array<{ name: string }> =
+        data.countryNamesListFromAPI ?? [];
 
     const openModal = () => {
         const modalSettings: ModalSettings = {
@@ -29,8 +40,7 @@
             component: {
                 ref: CountryPickerModal,
                 props: {
-                    // @ts-ignore
-                    countries: data.countryListAPIResponse,
+                    countries: countryListFromAPI,
                 },
             },
             response: (countryPickerData: CountryCardFormData) => {
@@ -49,13 +59,51 @@
 
     const deleteCard = (id: string) => {
         countryCards = countryCards.filter(
-            (countryCard) => countryCard.id != id,
+            (countryCard) => countryCard.id !== id,
         );
+    };
+
+    // Function to save the wall using the API endpoint
+    const saveWall = async () => {
+        try {
+            const response = await fetch("/api/wall", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    meta: wallMetaInfo,
+                    cards: countryCards,
+                }),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error(
+                    `Error saving wall: ${response.status} ${result.error}`,
+                );
+                alert("Failed to save wall.");
+            } else {
+                alert("Wall saved successfully.");
+            }
+        } catch (error) {
+            console.error(`Error in saveWall: ${error}`);
+            alert("An error occurred while saving the wall.");
+        }
     };
 </script>
 
 <div class="w-screen h-full mt-5 flex flex-col gap-5 items-center">
     <Modal />
+
+    <!-- Save Wall Button -->
+    <button
+        class="btn variant-filled-primary mb-4"
+        on:click|preventDefault={saveWall}
+    >
+        Save Wall
+    </button>
 
     {#each countryCards as card (card.id)}
         <CountryCard

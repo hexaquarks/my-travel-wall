@@ -45,6 +45,8 @@ namespace IdentityMongo.Controllers
             if (user != null)
             {
                 user.wallInfo = wallInfo;
+                Console.WriteLine(wallInfo.ToString());
+                /* Console.WriteLine(string.Join(", ", wallInfo.Cards.Select(card => card.ToString()))); */
                 var result = await _userManager.UpdateAsync(user);
 
                 if (result.Succeeded)

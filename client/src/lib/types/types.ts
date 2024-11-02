@@ -2,7 +2,7 @@ export type CountryCardFormData = {
     country: string;
     startDate?: string;
     endDate?: string;
-    pictures?: Array<File>;
+    pictures?: Array<string>;
     description?: string;
 };
 
@@ -46,7 +46,12 @@ export type WallMetaInfo = {
     createdAt: string;
 };
 
-export type Wall = {
+export type WallType = {
     wallMetaInfo: WallMetaInfo;
     countryCards: Array<CountryCardType>;
+}
+
+export type WallServerLoadInfo = {
+    wallInfo: WallType;
+    countryNamesListFromAPI: Array<{ name: string }>;
 }

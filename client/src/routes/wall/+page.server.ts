@@ -1,21 +1,58 @@
 import { env } from "$env/dynamic/private";
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
-import type { CountryCardType, Wall } from "$lib/types/types";
+import type { WallType, WallMetaInfo, WallServerLoadInfo } from "$lib/types/types";
 
-let countriesCache: Array<any> = [];
+let countriesCache: Array<{ name: string }> = [];
 
-// const getWallCountryCardsFromResponse = (res: JSON) => Array < CountryCardType > {
-//
-// }
+const defaultWallServerLoadValueGet = (): WallServerLoadInfo => {
+    var date = new Date();
+
+    return {
+        wallInfo: {
+            wallMetaInfo: {
+                isPublic: false,
+                createdAt: date.toISOString(),
+            },
+            countryCards: []
+        },
+        countryNamesListFromAPI: [],
+    };
+};
 
 export const load: PageServerLoad = async ({ locals, cookies }) => {
     if (!locals.user) {
         redirect(303, "/login");
     }
 
-    let countryListAPIResponse: any;
-    let countryCardList: Array<CountryCardType>;
+    let loadResult: WallServerLoadInfo = defaultWallServerLoadValueGet();
+
+    if (countriesCache.length == 0) {
+        // Fetch countries list for dropdown
+        try {
+            const response = await fetch(
+                "https://api.countrystatecity.in/v1/countries",
+                {
+                    headers: {
+                        "X-CSCAPI-KEY": env.COUNTRIES_API_KEY,
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error("Failed to fetch countries");
+            }
+
+            const countries = await response.json();
+            countriesCache = countries; // TODO: Damn data from +page.server.ts is cached by default actually! 
+
+        } catch (error) {
+            console.error(`Error in load function for /: ${error}`);
+            return loadResult;
+        }
+    }
+
+    loadResult.countryNamesListFromAPI = countriesCache.map(country => ({ name: country.name }));
 
     // Fetch country card lists from user's db.
     try {
@@ -40,55 +77,16 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
         }
 
         const jsonResponse = await response.json();
-        const wallInfo: Wall = jsonResponse;
+        loadResult.wallInfo = jsonResponse;
 
-        countryCardList = wallInfo["countryCards"];
-
-    } catch (error) {
-        console.error(`Error in load function for /: ${error}`);
-        return {
-            countryCardsList: [],
-            countryListAPIResponse: []
-        };
-    }
-
-    if (countriesCache.length > 0) {
-        return {
-            countryCardList,
-            countryListAPIResponse: countriesCache
-        };
-    }
-
-    // Fetch countries list for dropdown
-    try {
-        const response = await fetch(
-            "https://api.countrystatecity.in/v1/countries",
-            {
-                headers: {
-                    "X-CSCAPI-KEY": env.COUNTRIES_API_KEY,
-                },
-            }
-        );
-
-        if (!response.ok) {
-            throw new Error("Failed to fetch countries");
-        }
-
-        const countries = await response.json();
-        countriesCache = countries; // TODO: Damn data from +page.server.ts is cached by default actually! 
-
-        countryListAPIResponse = countries;
+        // countryCardList = wallInfo["countryCards"];
 
     } catch (error) {
         console.error(`Error in load function for /: ${error}`);
         return {
-            countryCardsList: [],
+            wallInfo: null,
             countryListAPIResponse: []
         };
     }
-
-    return {
-        countryCardList,
-        countryListAPIResponse
-    }
+    return loadResult;
 };
