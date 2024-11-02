@@ -5,10 +5,10 @@ namespace IdentityMongo.Models
 {
     public class Wall
     {
-        [JsonPropertyName("meta")]
+        [JsonPropertyName("wallMetaInfo")]
         public WallMetaInfo Meta { get; set; } = new WallMetaInfo();
 
-        [JsonPropertyName("cards")]
+        [JsonPropertyName("countryCards")]
         public List<CountryCard> Cards { get; set; } = new List<CountryCard>();
 
         public override string ToString()

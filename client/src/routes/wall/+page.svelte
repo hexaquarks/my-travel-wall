@@ -22,14 +22,12 @@
     initializeStores();
     const modalStore = getModalStore();
 
-    let countryCards: CountryCardType[] = data.wallInfo?.countryCards ?? [];
+    let countryCards: Array<CountryCardType> =
+        data.wallInfo?.countryCards ?? [];
     let wallMetaInfo: WallMetaInfo = data.wallInfo?.wallMetaInfo ?? {
         isPublic: false,
-        createdAt: Date.now().toString(),
+        createdAt: new Date().toISOString(),
     };
-    let date = new Date();
-    wallMetaInfo.createdAt = date.toISOString();
-
     let countryListFromAPI: Array<{ name: string }> =
         data.countryNamesListFromAPI ?? [];
 
@@ -72,8 +70,8 @@
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    meta: wallMetaInfo,
-                    cards: countryCards,
+                    wallMetaInfo: wallMetaInfo,
+                    countryCards: countryCards,
                 }),
             });
 
