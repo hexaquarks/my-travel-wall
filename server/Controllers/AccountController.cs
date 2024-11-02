@@ -114,7 +114,8 @@ namespace IdentityMongo.Controllers
                 {
                     user.Id,
                     user.UserName,
-                    user.Email
+                    user.Email,
+                    user.wallInfo
                 });
             }
 

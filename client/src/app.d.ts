@@ -1,4 +1,5 @@
-// src/app.d.ts
+import type { WallMetaInfo } from "$lib/types/types";
+
 declare global {
     namespace App {
         interface Locals {
@@ -6,6 +7,7 @@ declare global {
                 id: string;
                 userName: string;
                 email: string;
+                wallInfo: WallMetaInfo;
             } | null;
         }
         // interface PageData {}

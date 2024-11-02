@@ -46,7 +46,7 @@ export const actions = {
             const response = await fetch('http://localhost:5072/account/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password }),
+                body: JSON.stringify({ name, email, password, wallData }),
                 credentials: 'include'
             });
 

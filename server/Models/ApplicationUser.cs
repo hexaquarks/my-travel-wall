@@ -6,5 +6,6 @@ namespace IdentityMongo.Models
     [CollectionName("Users")] // maybe User ? 
     public class ApplicationUser : MongoIdentityUser<Guid>
     {
+        public Wall wallInfo { get; set; } = new Wall();
     }
 }

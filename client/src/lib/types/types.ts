@@ -2,7 +2,7 @@ export type CountryCardFormData = {
     country: string;
     startDate?: string;
     endDate?: string;
-    pictures?: Array<File>;
+    pictures?: Array<string>;
     description?: string;
 };
 
@@ -40,3 +40,18 @@ export type LoginFormsErrors = {
 export type CountryCardType = CountryCardFormData & {
     id: string;
 };
+
+export type WallMetaInfo = {
+    isPublic: boolean;
+    createdAt: string;
+};
+
+export type WallType = {
+    wallMetaInfo: WallMetaInfo;
+    countryCards: Array<CountryCardType>;
+}
+
+export type WallServerLoadInfo = {
+    wallInfo: WallType;
+    countryNamesListFromAPI: Array<{ name: string }>;
+}

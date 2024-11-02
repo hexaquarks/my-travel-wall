@@ -67,8 +67,10 @@ export const actions = {
             }
 
             // Extract the 'Set-Cookie' header from the backend response
-            const setCookieHeader = response.headers.get('set-cookie');
+            const setCookieHeader = response.headers.get('Set-Cookie');
             console.log(`Set-Cookie header: ${setCookieHeader}`);
+
+            cookies.set('Set-Cookie', setCookieHeader ?? "", { path: '/' });
 
             if (setCookieHeader) {
                 const cookieParts = setCookieHeader.split(';')[0];

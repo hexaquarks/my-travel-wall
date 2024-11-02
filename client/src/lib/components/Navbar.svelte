@@ -24,7 +24,7 @@
         <NavUl>
             <LightSwitch />
             <NavLi href="/">Home</NavLi>
-            <NavLi href="/wall">Build Wall</NavLi>
+            <NavLi href="/wall">Wall</NavLi>
             {#if user}
                 <NavLi>
                     <form method="POST" action="/logout" class="inline">
