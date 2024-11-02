@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { ModalSettings } from "@skeletonlabs/skeleton";
+    import { getModalStore } from "@skeletonlabs/skeleton";
     import {
         PlusOutline,
         MinusOutline,
@@ -17,14 +19,27 @@
     export let onDeleteCard: (id: string) => void;
     export let cardData: CountryCardFormData = { country: "" };
 
-    cardData.pictures = [
+    // Temporary for testing, of course
+    cardData.pictures = Array(5).fill(
         "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-        "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-        "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-        "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-        "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-    ];
+    );
     let isExpanded = true;
+
+    const modalStore = getModalStore();
+    const openConfirmationModal = (id: string) => {
+        const deleteCardConfirmationModal: ModalSettings = {
+            type: "confirm",
+            title: "Please Confirm",
+            body: "Are you sure you want to delete this trip report?",
+            response: (res: boolean) => {
+                if (res) {
+                    onDeleteCard(id);
+                    // TODO: Invoke a wall sync?
+                }
+            },
+        };
+        modalStore.trigger(deleteCardConfirmationModal);
+    };
 
     const toggleExpand = () => {
         isExpanded = !isExpanded;
@@ -64,9 +79,7 @@
     </div>
 {:else}
     <!-- Country Card with Data -->
-    <div
-        class="card p-6 w-3/5 max-w-[600px] h-fit shadow-lg rounded-lg bg-gray-800 text-white"
-    >
+    <div class="card p-6 w-3/5 max-w-[600px] h-fit shadow-lg rounded-lg">
         <div
             class="flex justify-between items-center pb-2 mb-4"
             class:border-b={isExpanded}
@@ -87,7 +100,7 @@
                 <button
                     type="button"
                     class="btn-icon variant-filled-surface"
-                    on:click={() => onDeleteCard(key)}
+                    on:click={() => openConfirmationModal(key)}
                 >
                     <MinusOutline />
                 </button>
