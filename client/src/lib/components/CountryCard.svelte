@@ -23,7 +23,7 @@
     cardData.pictures = Array(5).fill(
         "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
     );
-    let isExpanded = true;
+    let isExpanded = false;
 
     const modalStore = getModalStore();
     const openConfirmationModal = (id: string) => {
@@ -85,7 +85,9 @@
             class:border-b={isExpanded}
         >
             <div>
+                <!-- Country Name -->
                 <h2 class="text-2xl font-bold">{cardData.country}</h2>
+                <!-- Date Range -->
                 {#if cardData.startDate || cardData.endDate}
                     <p class="text-sm text-gray-400 flex items-center gap-2">
                         <CalendarMonthOutline class="inline w-4 h-4" />
@@ -96,6 +98,7 @@
                     </p>
                 {/if}
             </div>
+            <!-- Side Buttons -->
             <div class="flex items-center space-x-2">
                 <button
                     type="button"
@@ -125,6 +128,7 @@
                 transition:slide={{ delay: 0, duration: 250 }}
                 class="space-y-4"
             >
+                <!-- Picture Carousel -->
                 {#if cardData.pictures && cardData.pictures.length > 0}
                     <div>
                         <h3
@@ -150,6 +154,7 @@
                         </div>
                     </div>
                 {/if}
+                <!-- Description -->
                 {#if cardData.description}
                     <div class="py-2 rounded-md">
                         <h3
