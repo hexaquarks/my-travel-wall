@@ -1,25 +1,43 @@
 <script lang="ts">
+    import type {
+        CountryCardFormData,
+        CountryCardType,
+    } from "$lib/types/types";
     import { getModalStore } from "@skeletonlabs/skeleton";
 
     const modalStore = getModalStore();
 
-    export let countries: Array<{ name: string }> = [];
-    let selectedCountry: string = "";
-    let selectedStartDate: string = "";
-    let selectedEndDate: string = "";
-    let pictures: Array<File> = [];
-    let description: string = "";
+    export let modalInitialData: CountryCardType = {
+        id: "",
+        country: "",
+        startDate: "",
+        endDate: "",
+        pictures: [],
+        description: "",
+    };
+
+    export let modalCountriesList: Array<{ name: string }> = [];
+
+    let countries: Array<{ name: string }> = modalCountriesList;
+    let selectedCountry: string = modalInitialData.country;
+    let selectedStartDate: string = formatDateString(
+        modalInitialData.endDate ?? "",
+    );
+    let selectedEndDate: string = formatDateString(
+        modalInitialData.endDate ?? "",
+    );
+    let pictures: Array<File | string> = modalInitialData.pictures ?? [];
+    let description: string = modalInitialData.description ?? "";
 
     let countryError: boolean = false;
 
-    function formatDateString(dateString: string) {
-        if (!dateString) return null;
-
-        var date = new Date(dateString);
+    function formatDateString(dateString: string | undefined): string {
+        if (!dateString) return "";
+        const date = new Date(dateString);
         if (isNaN(date.getTime())) {
-            return null;
+            return "";
         }
-        return date.toISOString();
+        return date.toISOString().split("T")[0]; // Returns date in 'YYYY-MM-DD' format
     }
 
     const handleCountryChange = (event: Event) => {

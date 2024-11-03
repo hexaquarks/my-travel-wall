@@ -30,6 +30,7 @@
     },
     "type": "module",
     "dependencies": {
+        "assert": "^2.1.0",
         "uuid": "^10.0.0"
     }
 }
