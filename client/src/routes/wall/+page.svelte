@@ -57,7 +57,10 @@
             },
             response: (countryPickerData: CountryCardFormData) => {
                 if (countryPickerData) {
-                    addCard(countryPickerData);
+                    if (isEditMode) {
+                    } else {
+                        addCard(countryPickerData);
+                    }
                 }
             },
         };
@@ -67,6 +70,10 @@
     const addCard = (formData: CountryCardFormData) => {
         const newCard: CountryCardType = { id: uuid(), ...formData };
         countryCards = [...countryCards, newCard];
+    };
+
+    const editCard = (countryCardEditionData: CountryCardFormData) => {
+        // TODO: updateCountryCard()
     };
 
     const deleteCard = (id: string) => {
