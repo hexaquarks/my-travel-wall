@@ -6,6 +6,7 @@
         getModalStore,
         initializeStores,
     } from "@skeletonlabs/skeleton";
+    import { defaultCountryCard } from "$lib/util/util";
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { PageData } from "./$types";
@@ -19,6 +20,11 @@
 
     export let data: PageData & WallServerLoadInfo;
 
+    enum CountryPickerMode {
+        Edit,
+        Create,
+    }
+
     initializeStores();
     const modalStore = getModalStore();
 
@@ -31,19 +37,30 @@
     let countryListFromAPI: Array<{ name: string }> =
         data.countryNamesListFromAPI ?? [];
 
-    const openModal = () => {
+    const openCountryPickerModal = (
+        mode: CountryPickerMode,
+        cardId?: string,
+    ) => {
+        var isEditMode: boolean = mode == CountryPickerMode.Edit;
+
         const modalSettings: ModalSettings = {
             type: "component",
-            title: "Showcase the country you visited!",
+            title: `${isEditMode ? `Edit` : `Create`} the country you visited!`,
             component: {
                 ref: CountryPickerModal,
                 props: {
-                    countries: countryListFromAPI,
+                    modalCountriesList: countryListFromAPI,
+                    modalInitialData: isEditMode
+                        ? (getCard(cardId ?? "") ?? defaultCountryCard)
+                        : defaultCountryCard,
                 },
             },
             response: (countryPickerData: CountryCardFormData) => {
                 if (countryPickerData) {
-                    addCard(countryPickerData);
+                    if (isEditMode) {
+                    } else {
+                        addCard(countryPickerData);
+                    }
                 }
             },
         };
@@ -55,10 +72,18 @@
         countryCards = [...countryCards, newCard];
     };
 
+    const editCard = (countryCardEditionData: CountryCardFormData) => {
+        // TODO: updateCountryCard()
+    };
+
     const deleteCard = (id: string) => {
         countryCards = countryCards.filter(
             (countryCard) => countryCard.id !== id,
         );
+    };
+
+    const getCard = (id: string): CountryCardType | undefined => {
+        return countryCards.find((countryCard) => countryCard.id == id);
     };
 
     // Function to save the wall using the API endpoint
@@ -107,14 +132,14 @@
         <CountryCard
             key={card.id}
             isPlaceholder={false}
-            onOpenCountryPicker={openModal}
+            onOpenCountryPicker={openCountryPickerModal}
             onDeleteCard={deleteCard}
             cardData={card}
         />
     {/each}
     <CountryCard
         isPlaceholder={true}
-        onOpenCountryPicker={openModal}
+        onOpenCountryPicker={openCountryPickerModal}
         onDeleteCard={deleteCard}
     />
 </div>

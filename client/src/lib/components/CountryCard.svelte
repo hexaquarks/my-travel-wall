@@ -9,13 +9,22 @@
         CalendarMonthOutline,
         ClockOutline,
         FileLinesOutline,
+        EditOutline,
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
     import type { CountryCardFormData } from "$lib/types/types";
+    import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
 
+    enum CountryPickerMode {
+        Edit,
+        Create,
+    }
     export let key: string = "";
     export let isPlaceholder: boolean;
-    export let onOpenCountryPicker: () => void;
+    export let onOpenCountryPicker: (
+        mode: CountryPickerMode,
+        id?: string,
+    ) => void;
     export let onDeleteCard: (id: string) => void;
     export let cardData: CountryCardFormData = { country: "" };
 
@@ -28,6 +37,21 @@
     const modalStore = getModalStore();
     const openConfirmationModal = (id: string) => {
         const deleteCardConfirmationModal: ModalSettings = {
+            type: "confirm",
+            title: "Please Confirm",
+            body: "Are you sure you want to delete this trip report?",
+            response: (res: boolean) => {
+                if (res) {
+                    onDeleteCard(id);
+                    // TODO: Invoke a wall sync?
+                }
+            },
+        };
+        modalStore.trigger(deleteCardConfirmationModal);
+    };
+
+    const openEditionModal = (id: string) => {
+        const editCardModal: ModalSettings = {
             type: "confirm",
             title: "Please Confirm",
             body: "Are you sure you want to delete this trip report?",
@@ -72,7 +96,7 @@
         <button
             type="button"
             class="btn-icon variant-filled-surface"
-            on:click={onOpenCountryPicker}
+            on:click={() => onOpenCountryPicker(CountryPickerMode.Create)}
         >
             <PlusOutline />
         </button>
@@ -100,6 +124,14 @@
             </div>
             <!-- Side Buttons -->
             <div class="flex items-center space-x-2">
+                <button
+                    type="button"
+                    class="btn-icon variant-filled-surface"
+                    on:click={() =>
+                        onOpenCountryPicker(CountryPickerMode.Edit, key)}
+                >
+                    <EditOutline />
+                </button>
                 <button
                     type="button"
                     class="btn-icon variant-filled-surface"

@@ -2,8 +2,16 @@ export type CountryCardFormData = {
     country: string;
     startDate?: string;
     endDate?: string;
-    pictures?: Array<string>;
+    pictures?: Array<File | string>;
     description?: string;
+};
+
+export type CountryCreationModalFormat = {
+    countries: Array<{ name: string }>;
+    startDate: string;
+    endDate: string;
+    pictures: Array<string>;
+    description: string;
 };
 
 export type RegistrationFormErrors = {
