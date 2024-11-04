@@ -21,12 +21,12 @@
     let countries: Array<{ name: string }> = modalCountriesList;
     let selectedCountry: string = modalInitialData.country;
     let selectedStartDate: string = formatDateString(
-        modalInitialData.endDate ?? "",
+        modalInitialData.startDate ?? "",
     );
     let selectedEndDate: string = formatDateString(
         modalInitialData.endDate ?? "",
     );
-    let pictures: Array<File | string> = modalInitialData.pictures ?? [];
+    let pictures: Array<string> = modalInitialData.pictures ?? [];
     let description: string = modalInitialData.description ?? "";
 
     let countryError: boolean = false;
@@ -37,7 +37,7 @@
         if (isNaN(date.getTime())) {
             return "";
         }
-        return date.toISOString().split("T")[0]; // Returns date in 'YYYY-MM-DD' format
+        return date.toISOString().split("T")[0];
     }
 
     const handleCountryChange = (event: Event) => {
@@ -59,7 +59,7 @@
     const handlePicturesChange = (event: Event) => {
         const target = event.target as HTMLInputElement;
         if (target.files) {
-            pictures = Array.from(target.files);
+            pictures = Array.from(target.files).map((file) => file.name);
         }
     };
 

@@ -2,7 +2,7 @@ export type CountryCardFormData = {
     country: string;
     startDate?: string;
     endDate?: string;
-    pictures?: Array<File | string>;
+    pictures?: Array<string>;
     description?: string;
 };
 
