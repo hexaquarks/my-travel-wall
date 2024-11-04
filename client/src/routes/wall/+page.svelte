@@ -58,6 +58,10 @@
             response: (countryPickerData: CountryCardFormData) => {
                 if (countryPickerData) {
                     if (isEditMode) {
+                        editCard({
+                            id: cardId ?? "",
+                            ...countryPickerData,
+                        } as CountryCardType);
                     } else {
                         addCard(countryPickerData);
                     }
@@ -72,8 +76,15 @@
         countryCards = [...countryCards, newCard];
     };
 
-    const editCard = (countryCardEditionData: CountryCardFormData) => {
-        // TODO: updateCountryCard()
+    const editCard = (newCountryCard: CountryCardType) => {
+        const index = countryCards.findIndex(
+            (card) => card.id === newCountryCard.id,
+        );
+
+        if (index !== -1) {
+            countryCards[index] = newCountryCard;
+            updateCard(newCountryCard);
+        }
     };
 
     const deleteCard = (id: string) => {
@@ -113,6 +124,33 @@
         } catch (error) {
             console.error(`Error in saveWall: ${error}`);
             alert("An error occurred while saving the wall.");
+        }
+    };
+
+    // Function to save the wall using the API endpoint
+    const updateCard = async (countryCardEditionData: CountryCardFormData) => {
+        try {
+            const response = await fetch("/api/countryCard", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(countryCardEditionData),
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                console.error(
+                    `Error updating country card: ${response.status} ${result.error}`,
+                );
+                alert("Failed to country card.");
+            } else {
+                alert("Country card updated successfully.");
+            }
+        } catch (error) {
+            console.error(`Error in updateCard: ${error}`);
+            alert("An error occurred while updating a country card.");
         }
     };
 </script>

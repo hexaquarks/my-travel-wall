@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import type { CountryCardType, WallType } from '$lib/types/types';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
@@ -10,27 +9,27 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         }
 
         const cookieHeader = `authentication_cookie=${authenticationCookie}`;
-        const newWallInfo = await request.json();
+        const newCountryCardInfo = await request.json();
 
-        // Update wall in backend withe the wall's info.
-        const response = await fetch('http://localhost:5072/wall', {
+        // Update card in backend withe the new card info.
+        const response = await fetch('http://localhost:5072/country', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Cookie': cookieHeader,
             },
-            body: JSON.stringify(newWallInfo),
+            body: JSON.stringify(newCountryCardInfo),
         });
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`Error saving wall: ${response.status} ${errorText} `);
-            return json({ error: 'Failed to save wall' }, { status: response.status });
+            console.error(`Error saving card: ${response.status} ${errorText}`);
+            return json({ error: 'Failed to save card' }, { status: response.status });
         }
 
         return json({ success: true });
     } catch (error) {
-        console.error(`Error in API endpoint: ${error} `);
-        return json({ error: 'An error occurred while saving the wall' }, { status: 500 });
+        console.error(`Error in API endpoint: ${error}`);
+        return json({ error: 'An error occurred while saving the card' }, { status: 500 });
     }
 };
