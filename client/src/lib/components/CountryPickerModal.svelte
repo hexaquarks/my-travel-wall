@@ -1,59 +1,30 @@
 <script lang="ts">
-    import type {
-        CountryCardFormData,
-        CountryCardType,
-    } from "$lib/types/types";
+    import type { CountryCardType } from "$lib/types/types";
+    import { defaultCountryCard } from "$lib/util/util";
     import { getModalStore } from "@skeletonlabs/skeleton";
 
     const modalStore = getModalStore();
 
-    export let modalInitialData: CountryCardType = {
-        id: "",
-        country: "",
-        startDate: "",
-        endDate: "",
-        pictures: [],
-        description: "",
-    };
-
+    export let modalInitialData: CountryCardType = defaultCountryCard;
     export let modalCountriesList: Array<{ name: string }> = [];
 
-    let countries: Array<{ name: string }> = modalCountriesList;
-    let selectedCountry: string = modalInitialData.country;
-    let selectedStartDate: string = formatDateString(
-        modalInitialData.startDate ?? "",
-    );
-    let selectedEndDate: string = formatDateString(
-        modalInitialData.endDate ?? "",
-    );
-    let pictures: Array<string> = modalInitialData.pictures ?? [];
-    let description: string = modalInitialData.description ?? "";
+    let countries = modalCountriesList;
+    let selectedCountry = modalInitialData.country;
+    let selectedStartDate = extractDate(modalInitialData.startDate);
+    let selectedEndDate = extractDate(modalInitialData.endDate);
+    let pictures = modalInitialData.pictures ?? [];
+    let description = modalInitialData.description ?? "";
 
-    let countryError: boolean = false;
+    let countryError = false;
 
-    function formatDateString(dateString: string | undefined): string {
-        if (!dateString) return "";
-        const date = new Date(dateString);
-        if (isNaN(date.getTime())) {
-            return "";
-        }
-        return date.toISOString().split("T")[0];
+    function extractDate(dateString: string | undefined): string {
+        return dateString ? dateString.split("T")[0] : "";
     }
 
     const handleCountryChange = (event: Event) => {
         const target = event.target as HTMLSelectElement;
         selectedCountry = target.value;
         countryError = false;
-    };
-
-    const handleStartDateChange = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        selectedStartDate = target.value;
-    };
-
-    const handleEndDateChange = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        selectedEndDate = target.value;
     };
 
     const handlePicturesChange = (event: Event) => {
@@ -72,14 +43,12 @@
             countryError = true;
             return;
         }
-        if ($modalStore[0]?.response) {
-            var startDateFormatted = formatDateString(selectedStartDate);
-            var endDateFormatted = formatDateString(selectedEndDate);
 
+        if ($modalStore[0]?.response) {
             $modalStore[0].response({
                 country: selectedCountry,
-                startDate: startDateFormatted,
-                endDate: endDateFormatted,
+                startDate: selectedStartDate || null,
+                endDate: selectedEndDate || null,
                 pictures: pictures,
                 description: description,
             });
@@ -141,7 +110,6 @@
                         type="date"
                         class="input w-full mt-1 variant-form-material"
                         bind:value={selectedStartDate}
-                        on:change={handleStartDateChange}
                     />
                 </div>
                 <div class="flex-1">
@@ -153,7 +121,6 @@
                         type="date"
                         class="input w-full mt-1 variant-form-material"
                         bind:value={selectedEndDate}
-                        on:change={handleEndDateChange}
                     />
                 </div>
             </div>

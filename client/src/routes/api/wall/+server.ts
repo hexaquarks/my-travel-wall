@@ -24,13 +24,13 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 
         if (!response.ok) {
             const errorText = await response.text();
-            console.error(`Error saving wall: ${response.status} ${errorText}`);
+            console.error(`Error saving wall: ${response.status} ${errorText} `);
             return json({ error: 'Failed to save wall' }, { status: response.status });
         }
 
         return json({ success: true });
     } catch (error) {
-        console.error(`Error in API endpoint: ${error}`);
+        console.error(`Error in API endpoint: ${error} `);
         return json({ error: 'An error occurred while saving the wall' }, { status: 500 });
     }
 };

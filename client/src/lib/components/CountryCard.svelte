@@ -32,26 +32,12 @@
     cardData.pictures = Array(5).fill(
         "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
     );
+    cardData.pictures = [];
     let isExpanded = false;
 
     const modalStore = getModalStore();
     const openConfirmationModal = (id: string) => {
         const deleteCardConfirmationModal: ModalSettings = {
-            type: "confirm",
-            title: "Please Confirm",
-            body: "Are you sure you want to delete this trip report?",
-            response: (res: boolean) => {
-                if (res) {
-                    onDeleteCard(id);
-                    // TODO: Invoke a wall sync?
-                }
-            },
-        };
-        modalStore.trigger(deleteCardConfirmationModal);
-    };
-
-    const openEditionModal = (id: string) => {
-        const editCardModal: ModalSettings = {
             type: "confirm",
             title: "Please Confirm",
             body: "Are you sure you want to delete this trip report?",
