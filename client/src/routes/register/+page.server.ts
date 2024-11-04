@@ -1,32 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { RegistrationFormFields, RegistrationFormErrors } from "$lib/types/types.js";
-
-// Contract established on the backend server.
-type ErrorField = "password" | "email" | "name" | "general";
-type BackendErrorStructure = { field: ErrorField; message: string }[];
-
-function populateErrorMessagesRecievedFromBackend(
-    errorData: BackendErrorStructure,
-    errors: RegistrationFormErrors) {
-    errorData.forEach((error) => {
-        switch (error.field) {
-            case "name":
-                (errors.name ??= []).push(error.message);
-                break;
-            case "email":
-                (errors.email ??= []).push(error.message);
-                break;
-            case "password":
-                (errors.password ??= []).push(error.message);
-                break;
-            case "general":
-                (errors.general ??= []).push(error.message)
-            default:
-                break;
-        }
-    });
-}
+import { populateErrorMessagesReceivedFromBackend } from '$lib/util/formUtil';
 
 export const actions = {
     default: async ({ request }) => {
@@ -46,14 +21,14 @@ export const actions = {
             const response = await fetch('http://localhost:5072/account/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password, wallData }),
+                body: JSON.stringify({ name, email, password }),
                 credentials: 'include'
             });
 
             if (!response.ok) {
                 const errorData = await response.json();
 
-                populateErrorMessagesRecievedFromBackend(errorData, errors);
+                populateErrorMessagesReceivedFromBackend(errorData, errors);
 
                 return fail(response.status, {
                     ...formValues,

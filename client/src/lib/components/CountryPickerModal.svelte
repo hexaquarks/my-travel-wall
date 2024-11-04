@@ -2,6 +2,7 @@
     import type { CountryCardType } from "$lib/types/types";
     import { defaultCountryCard } from "$lib/util/util";
     import { getModalStore } from "@skeletonlabs/skeleton";
+    import { formatDate } from "$lib/util/util";
 
     const modalStore = getModalStore();
 
@@ -10,16 +11,12 @@
 
     let countries = modalCountriesList;
     let selectedCountry = modalInitialData.country;
-    let selectedStartDate = extractDate(modalInitialData.startDate);
-    let selectedEndDate = extractDate(modalInitialData.endDate);
+    let selectedStartDate = formatDate(modalInitialData.startDate);
+    let selectedEndDate = formatDate(modalInitialData.endDate);
     let pictures = modalInitialData.pictures ?? [];
     let description = modalInitialData.description ?? "";
 
     let countryError = false;
-
-    function extractDate(dateString: string | undefined): string {
-        return dateString ? dateString.split("T")[0] : "";
-    }
 
     const handleCountryChange = (event: Event) => {
         const target = event.target as HTMLSelectElement;

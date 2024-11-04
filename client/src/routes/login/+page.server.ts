@@ -1,29 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { LoginFormFields, LoginFormErrors } from "$lib/types/types.js";
-
-// Contract established on the backend server.
-type ErrorField = "password" | "email" | "general";
-type BackendErrorStructure = { field: ErrorField; message: string }[];
-
-function populateErrorMessagesRecievedFromBackend(
-    errorData: BackendErrorStructure,
-    errors: LoginFormErrors) {
-    errorData.forEach((error) => {
-        switch (error.field) {
-            case "email":
-                (errors.email ??= []).push(error.message);
-                break;
-            case "password":
-                (errors.password ??= []).push(error.message);
-                break;
-            case "general":
-                (errors.general ??= []).push(error.message)
-            default:
-                break;
-        }
-    });
-}
+import { populateErrorMessagesReceivedFromBackend } from '$lib/util/formUtil';
 
 export const actions = {
     default: async ({ request, cookies }) => {
@@ -45,12 +23,11 @@ export const actions = {
                 credentials: 'include'
             });
 
-            console.log(`login response status ${response.ok}`)
-
             if (!response.ok) {
                 const errorData = await response.json();
+                // TODO: Indicate to client that this user was not found in the database.
 
-                populateErrorMessagesRecievedFromBackend(errorData, errors);
+                populateErrorMessagesReceivedFromBackend(errorData, errors);
                 console.log(errors);
 
                 return fail(response.status, {
@@ -95,6 +72,6 @@ export const actions = {
         }
 
         // TODO :Registration and sign-in successful
-        redirect(303, '/');
+        redirect(303, '/wall');
     }
 } satisfies Actions;

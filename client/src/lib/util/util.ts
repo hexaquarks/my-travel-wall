@@ -8,3 +8,10 @@ export const defaultCountryCard: CountryCardType = {
     pictures: [],
     description: "",
 };
+
+// Retrieves a YY::XX::DD from a long ISO string.
+export function formatDate(dateStr: string | undefined): string {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    return date.toLocaleDateString();
+}

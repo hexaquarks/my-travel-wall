@@ -13,7 +13,7 @@
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
     import type { CountryCardFormData } from "$lib/types/types";
-    import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
+    import { formatDate } from "$lib/util/util";
 
     enum CountryPickerMode {
         Edit,
@@ -53,12 +53,6 @@
 
     const toggleExpand = () => {
         isExpanded = !isExpanded;
-    };
-
-    const formatDate = (dateStr: string | undefined) => {
-        if (!dateStr) return "";
-        const date = new Date(dateStr);
-        return date.toLocaleDateString();
     };
 
     const isCardExpandable = (): boolean => {
