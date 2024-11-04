@@ -2,8 +2,10 @@ import { env } from "$env/dynamic/private";
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from "./$types";
 import type { WallType, WallMetaInfo, WallServerLoadInfo } from "$lib/types/types";
+import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
 
 let countriesCache: Array<{ name: string }> = [];
+
 
 const defaultWallServerLoadValueGet = (): WallServerLoadInfo => {
     var date = new Date();
@@ -62,7 +64,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
         }
         const cookieHeader = `authentication_cookie=${authenticationCookie}`;
         const response = await fetch(
-            "http://localhost:5072/wall/",
+            `${PUBLIC_BACKEND_SERVER_URL}/wall/`,
             {
                 method: 'GET',
                 headers: {

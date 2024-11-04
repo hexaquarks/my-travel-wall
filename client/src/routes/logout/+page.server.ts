@@ -1,4 +1,5 @@
 import { redirect } from '@sveltejs/kit';
+import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
 
 // TODO: Make env variable
 const SERVER_COOKIE_NAME: string = "authentication_cookie";
@@ -10,7 +11,7 @@ export const actions = {
         // Delete the session cookie
         cookies.delete(SERVER_COOKIE_NAME, { path: '/' });
 
-        await fetch('http://localhost:5072/account/logout', {
+        await fetch(`${PUBLIC_BACKEND_SERVER_URL}/account/logout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

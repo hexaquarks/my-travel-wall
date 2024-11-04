@@ -1,4 +1,7 @@
 import type { Cookies } from '@sveltejs/kit';
+import { env } from "$env/dynamic/public";
+
+const BACKEND_URL = env.PUBLIC_BACKEND_SERVER_URL;
 
 export async function apiFetch(
     endpoint: string,
@@ -16,7 +19,9 @@ export async function apiFetch(
         headers['Cookie'] = `authentication_cookie=${authenticationCookie}`;
     }
 
-    const response = await fetch(`http://localhost:5072${endpoint}`, {
+    console.log(`the url is ${BACKEND_URL}`)
+
+    const response = await fetch(`${BACKEND_URL}${endpoint}`, {
         ...options,
         headers,
         credentials: 'include',

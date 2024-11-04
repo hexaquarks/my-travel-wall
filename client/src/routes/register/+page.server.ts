@@ -2,6 +2,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import type { Actions } from './$types';
 import type { RegistrationFormFields, RegistrationFormErrors } from "$lib/types/types.js";
 import { populateErrorMessagesReceivedFromBackend } from '$lib/util/formUtil';
+import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
 
 export const actions = {
     default: async ({ request }) => {
@@ -18,7 +19,7 @@ export const actions = {
         const errors: RegistrationFormErrors = {};
 
         try {
-            const response = await fetch('http://localhost:5072/account/register', {
+            const response = await fetch(`${PUBLIC_BACKEND_SERVER_URL}/account/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, password }),
