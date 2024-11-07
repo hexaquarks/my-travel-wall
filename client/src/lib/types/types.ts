@@ -1,3 +1,10 @@
+export type User = {
+    id: string;
+    userName: string;
+    email: string;
+    wallInfo: WallMetaInfo;
+}
+
 export type CountryCardFormData = {
     country: string;
     startDate?: string;

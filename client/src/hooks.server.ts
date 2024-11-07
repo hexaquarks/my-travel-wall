@@ -1,4 +1,5 @@
 import type { Handle } from '@sveltejs/kit';
+import type { User } from '$lib/types/types';
 import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -13,7 +14,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     });
 
     if (response.ok) {
-        const user = await response.json();
+        const user: User = await response.json();
         event.locals.user = user;
         console.log(user);
     } else {
