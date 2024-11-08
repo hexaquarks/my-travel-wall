@@ -1,11 +1,11 @@
-import { apiFetch } from '$lib/util/apiClientProxy';
+import { apiClient } from '$lib/util/apiClientProxy';
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
         const newCountryCardInfo = await request.json();
-        await apiFetch(
+        await apiClient.post(
             '/country',
             {
                 method: 'POST',

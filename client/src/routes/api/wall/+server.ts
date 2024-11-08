@@ -1,12 +1,12 @@
-import { apiFetch } from '$lib/util/apiClientProxy';
+import { apiClient } from '$lib/util/apiClientProxy';
 import type { RequestHandler } from './$types';
 import { json } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request, cookies }) => {
     try {
         const newWallInfo = await request.json();
-        await apiFetch(
-            '/country',
+        await apiClient.post(
+            '/wall',
             {
                 method: 'POST',
                 body: JSON.stringify(newWallInfo)
@@ -17,3 +17,4 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
         return json({ error: 'Failed to save wall' }, { status: 500 });
     }
 };
+

@@ -81,8 +81,6 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
         const jsonResponse = await response.json();
         loadResult.wallInfo = jsonResponse;
 
-        // countryCardList = wallInfo["countryCards"];
-
     } catch (error) {
         console.error(`Error in load function for /: ${error}`);
         return {
