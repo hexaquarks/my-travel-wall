@@ -1,4 +1,4 @@
-import type { WallMetaInfo } from "$lib/types/types";
+import type { WallMetaInfo, User } from "$lib/types/types";
 
 declare global {
     namespace App {

@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {
         Navbar,
         NavBrand,
@@ -7,8 +7,7 @@
         NavLi,
     } from "flowbite-svelte";
     import { LightSwitch } from "@skeletonlabs/skeleton";
-
-    export let user;
+    import { userStore } from "$lib/stores/userStore";
 </script>
 
 <slot>
@@ -25,7 +24,7 @@
             <LightSwitch />
             <NavLi href="/">Home</NavLi>
             <NavLi href="/wall">Wall</NavLi>
-            {#if user}
+            {#if $userStore}
                 <NavLi>
                     <form method="POST" action="/logout" class="inline">
                         <button type="submit">Logout</button>

@@ -1,11 +1,17 @@
 <script lang="ts">
-    import Navbar from "$lib/components/Navbar.svelte";
     import "../app.css";
     import type { PageData } from "./$types";
+    import Navbar from "$lib/components/Navbar.svelte";
+    import { userStore } from "$lib/stores/userStore";
 
-    type Temp = { user: string };
-    export let data: PageData & Temp;
+    export let data: PageData;
+
+    // Update the user store with the data from the server
+    $: if (data.user !== undefined) {
+        userStore.set(data.user);
+    }
 </script>
 
-<Navbar user={data.user ?? ""} />
+<Navbar />
+
 <slot />

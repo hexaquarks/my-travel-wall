@@ -1,7 +1,9 @@
 import { env } from "$env/dynamic/private";
 import { redirect } from '@sveltejs/kit';
+import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
+
 import type { PageServerLoad } from "./$types";
-import type { WallType, WallMetaInfo, WallServerLoadInfo } from "$lib/types/types";
+import type { WallServerLoadInfo } from "$lib/types/types";
 
 let countriesCache: Array<{ name: string }> = [];
 
@@ -62,7 +64,7 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
         }
         const cookieHeader = `authentication_cookie=${authenticationCookie}`;
         const response = await fetch(
-            "http://localhost:5072/wall/",
+            `${PUBLIC_BACKEND_SERVER_URL}/wall/`,
             {
                 method: 'GET',
                 headers: {
@@ -78,8 +80,6 @@ export const load: PageServerLoad = async ({ locals, cookies }) => {
 
         const jsonResponse = await response.json();
         loadResult.wallInfo = jsonResponse;
-
-        // countryCardList = wallInfo["countryCards"];
 
     } catch (error) {
         console.error(`Error in load function for /: ${error}`);

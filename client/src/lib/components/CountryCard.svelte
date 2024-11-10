@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { ModalSettings } from "@skeletonlabs/skeleton";
     import { getModalStore } from "@skeletonlabs/skeleton";
     import {
         PlusOutline,
@@ -12,8 +11,10 @@
         EditOutline,
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
+    import { formatDate } from "$lib/util/util";
+
+    import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { CountryCardFormData } from "$lib/types/types";
-    import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
 
     enum CountryPickerMode {
         Edit,
@@ -53,12 +54,6 @@
 
     const toggleExpand = () => {
         isExpanded = !isExpanded;
-    };
-
-    const formatDate = (dateStr: string | undefined) => {
-        if (!dateStr) return "";
-        const date = new Date(dateStr);
-        return date.toLocaleDateString();
     };
 
     const isCardExpandable = (): boolean => {
