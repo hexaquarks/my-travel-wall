@@ -1,23 +1,22 @@
 <script lang="ts">
-    import { v4 as uuid } from "uuid";
-    import CountryCard from "$lib/components/CountryCard.svelte";
     import {
         Modal,
         getModalStore,
         initializeStores,
     } from "@skeletonlabs/skeleton";
     import { defaultCountryCard } from "$lib/util/util";
-    import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
+
     import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { PageData } from "./$types";
     import type {
         CountryCardType,
         CountryCardFormData,
         WallServerLoadInfo,
-        WallType,
-        WallMetaInfo,
     } from "$lib/types/types";
-    import { WallManager } from "$lib/services/WallManager";
+
+    import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
+    import WallManager from "$lib/services/WallManager";
+    import CountryCard from "$lib/components/CountryCard.svelte";
 
     export let data: PageData & WallServerLoadInfo;
 

@@ -1,12 +1,13 @@
 import { v4 as uuid } from 'uuid';
+import { writable, type Writable, get } from 'svelte/store';
+
 import type {
     CountryCardType,
     CountryCardFormData,
     WallMetaInfo,
 } from '$lib/types/types';
-import { writable, type Writable, get } from 'svelte/store';
 
-export class WallManager {
+export default class WallManager {
     countryCards: Writable<CountryCardType[]>;
     wallMetaInfo: Writable<WallMetaInfo>;
 

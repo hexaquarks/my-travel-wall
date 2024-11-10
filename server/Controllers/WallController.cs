@@ -24,6 +24,13 @@ namespace IdentityMongo.Controllers
             if (user != null)
             {
                 Console.WriteLine("Successfuly returning the wall of the logged in user");
+
+                Console.Write("Cards: ");
+                foreach (CountryCard card in user.wallInfo.Cards)
+                {
+                    Console.Write(card + " ");
+                }
+                Console.WriteLine("");
                 return Ok(user.wallInfo);
             }
             Console.WriteLine("Failed to get logged in user's wall");

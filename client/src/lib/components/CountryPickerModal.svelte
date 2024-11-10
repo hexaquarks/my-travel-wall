@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { CountryCardType } from "$lib/types/types";
     import { defaultCountryCard } from "$lib/util/util";
     import { getModalStore } from "@skeletonlabs/skeleton";
     import { formatDate } from "$lib/util/util";
+
+    import type { CountryCardType } from "$lib/types/types";
 
     const modalStore = getModalStore();
 

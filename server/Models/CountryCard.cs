@@ -10,7 +10,7 @@ namespace IdentityMongo.Models
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [JsonPropertyName("country")]
-        public string Country { get; set; }
+        public string Country { get; set; } = "";
 
         [JsonPropertyName("startDate")]
         public DateTime? StartDate { get; set; }

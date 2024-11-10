@@ -1,8 +1,9 @@
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions } from './$types';
-import type { LoginFormFields, LoginFormErrors } from "$lib/types/types.js";
 import { populateErrorMessagesReceivedFromBackend } from '$lib/util/formUtil';
 import { PUBLIC_BACKEND_SERVER_URL } from "$env/static/public";
+
+import type { Actions } from './$types';
+import type { LoginFormErrors } from "$lib/types/types.js";
 
 export const actions = {
     default: async ({ request, cookies }) => {

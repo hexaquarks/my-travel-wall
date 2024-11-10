@@ -22,6 +22,8 @@ namespace IdentityMongo.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateMyWall([FromBody] CountryCard countryCardInfo)
         {
+            Console.WriteLine("===================recievews to update:");
+            Console.WriteLine(countryCardInfo.ToString());
             if (countryCardInfo == null)
             {
                 Console.WriteLine("Invalid country card data passed to backend");
@@ -42,6 +44,14 @@ namespace IdentityMongo.Controllers
                 {
                     user.wallInfo.Cards.Add(countryCardInfo);
                 }
+
+                Console.Write(" The new updated Cards: ");
+                foreach (CountryCard card in user.wallInfo.Cards)
+                {
+                    Console.Write(card + " ");
+                }
+                Console.WriteLine("");
+
 
                 var result = await _userManager.UpdateAsync(user);
 

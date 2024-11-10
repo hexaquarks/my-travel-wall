@@ -1,5 +1,4 @@
 <script lang="ts">
-    import type { ModalSettings } from "@skeletonlabs/skeleton";
     import { getModalStore } from "@skeletonlabs/skeleton";
     import {
         PlusOutline,
@@ -12,8 +11,10 @@
         EditOutline,
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
-    import type { CountryCardFormData } from "$lib/types/types";
     import { formatDate } from "$lib/util/util";
+
+    import type { ModalSettings } from "@skeletonlabs/skeleton";
+    import type { CountryCardFormData } from "$lib/types/types";
 
     enum CountryPickerMode {
         Edit,
