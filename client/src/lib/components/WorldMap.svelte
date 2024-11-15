@@ -71,6 +71,7 @@
                 <path
                     fill={scale(ratios.get(feature.properties.name))}
                     d={path(feature)}
+                    class="country"
                 />
             {/each}
         </g>
@@ -84,5 +85,23 @@
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    /* Default country color */
+    .country {
+        fill: #6b7280;
+        stroke: #111827;
+        line-height: 10;
+        transition: fill 0.3s ease;
+    }
+
+    /* Hovered country color */
+    .country:hover {
+        fill: #1e90ff !important;
+    }
+
+    /* Visited country color */
+    .country.visited {
+        fill: #00c853 !important;
     }
 </style>
