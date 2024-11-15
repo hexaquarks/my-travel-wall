@@ -17,8 +17,11 @@
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import WallManager from "$lib/services/WallManager";
     import CountryCard from "$lib/components/CountryCard.svelte";
+    import WorldMap from "$lib/components/WorldMap.svelte";
 
     export let data: PageData & WallServerLoadInfo;
+
+    let w, h;
 
     enum CountryPickerMode {
         Edit,
@@ -75,10 +78,18 @@
         };
         modalStore.trigger(modalSettings);
     };
+
+    // let colors = ["#ea4f19", "#b15222", "#75542a", "#3c5733", "#005739"];
 </script>
 
-<div class="w-screen h-full mt-5 flex flex-col gap-5 items-center">
+<div
+    class="w-screen h-full mt-5 flex flex-col gap-5 items-center"
+    bind:clientWidth={w}
+    bind:clientHeight={h}
+>
     <Modal />
+
+    <WorldMap parentWidth={(w * 3) / 5} parentHeight={(h * 3) / 5} />
 
     <!-- Save Wall Button -->
     <button
