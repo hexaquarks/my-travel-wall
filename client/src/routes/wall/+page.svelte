@@ -5,6 +5,7 @@
         initializeStores,
     } from "@skeletonlabs/skeleton";
     import { defaultCountryCard } from "$lib/util/util";
+    import { WORLD_MAP_ANTARTICA_SIZE_TO_CUT } from "$lib/util/util";
 
     import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { PageData } from "./$types";
@@ -17,8 +18,14 @@
     import CountryPickerModal from "$lib/components/CountryPickerModal.svelte";
     import WallManager from "$lib/services/WallManager";
     import CountryCard from "$lib/components/CountryCard.svelte";
+    import WorldMap from "$lib/components/WorldMap.svelte";
 
     export let data: PageData & WallServerLoadInfo;
+
+    let w;
+    let h = 575;
+
+    let margintemp = `-${WORLD_MAP_ANTARTICA_SIZE_TO_CUT}px`;
 
     enum CountryPickerMode {
         Edit,
@@ -75,14 +82,22 @@
         };
         modalStore.trigger(modalSettings);
     };
+
+    // let colors = ["#ea4f19", "#b15222", "#75542a", "#3c5733", "#005739"];
 </script>
 
-<div class="w-screen h-full mt-5 flex flex-col gap-5 items-center">
+<div
+    class="w-screen h-full mt-5 flex flex-col gap-5 items-center"
+    bind:clientWidth={w}
+>
     <Modal />
+
+    <WorldMap parentWidth={(w * 4) / 5} parentHeight={h} />
 
     <!-- Save Wall Button -->
     <button
-        class="btn variant-filled-primary mb-4"
+        class="btn variant-filled-primary mb-4 save-button-class"
+        style="margin-top: -{WORLD_MAP_ANTARTICA_SIZE_TO_CUT}px;"
         on:click|preventDefault={wallManager.saveWall}
     >
         Save Wall
