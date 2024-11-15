@@ -15,3 +15,6 @@ export function formatDate(dateStr: string | undefined): string {
     const date = new Date(dateStr);
     return date.toLocaleDateString();
 }
+
+// Used by WorldMap to cut the Antartica part from it. No one travels there.
+export const WORLD_MAP_ANTARTICA_SIZE_TO_CUT = 150;

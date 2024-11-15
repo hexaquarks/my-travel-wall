@@ -1,18 +1,13 @@
 <script lang="ts">
-    import { geoPath, geoMercator, geoNaturalEarth1 } from "d3-geo";
+    import { geoPath, geoNaturalEarth1 } from "d3-geo";
     import { scaleLinear } from "d3-scale";
     import { feature, mesh } from "topojson-client";
     import { onMount } from "svelte";
+    import { WORLD_MAP_ANTARTICA_SIZE_TO_CUT } from "$lib/util/util";
 
     let dimensions = {
         width: 700,
         height: 720,
-        margin: {
-            top: 24,
-            right: 0,
-            left: 0,
-            bottom: 6,
-        },
     };
 
     export let parentWidth, parentHeight;
@@ -30,25 +25,30 @@
 
     onMount(async () => {
         const world = await fetch(
-            "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-50m.json",
+            "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json",
         ).then((d) => d.json());
 
         // @ts-ignore
         deps = feature(world, world.objects.countries).features;
-
         meshWorld = mesh(world, world.objects.countries, (a, b) => a !== b);
 
-        const containerWidth = parentWidth;
-        const containerHeight = parentHeight;
+        dimensions.width = parentWidth;
+        dimensions.height = parentHeight;
 
-        dimensions.width =
-            containerWidth - dimensions.margin.left - dimensions.margin.right;
-        dimensions.height =
-            containerHeight - dimensions.margin.top - dimensions.margin.bottom;
+        const [tx, ty] = geoNaturalEarth1().translate();
 
+        // TODO: Lots of magic constants, I'll let it pass for now.
         projection = geoNaturalEarth1()
-            .scale(containerWidth / 5.5) // Adjust scale as needed
-            .translate([containerWidth / 2, containerHeight / 2]);
+            .scale(150)
+            .translate([tx - 50, ty - 50])
+            .center([0, 10])
+            .clipExtent([
+                [0, 0],
+                [
+                    dimensions.width,
+                    dimensions.height - WORLD_MAP_ANTARTICA_SIZE_TO_CUT - 50,
+                ],
+            ]);
 
         path.projection(projection);
     });
@@ -80,7 +80,7 @@
 <style>
     .world-map-container {
         width: 100%;
-        height: auto;
+        height: fit-content;
         display: flex;
         justify-content: center;
         align-items: center;
