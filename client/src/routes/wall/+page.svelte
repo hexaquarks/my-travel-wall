@@ -92,7 +92,11 @@
 >
     <Modal />
 
-    <WorldMap parentWidth={(w * 4) / 5} parentHeight={h} />
+    <WorldMap
+        parentWidth={(w * 4) / 5}
+        parentHeight={h}
+        visitedCountries={$countryCards.map((card) => card.country)}
+    />
 
     <!-- Save Wall Button -->
     <button

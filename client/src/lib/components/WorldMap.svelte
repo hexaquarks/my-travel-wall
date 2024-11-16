@@ -10,7 +10,9 @@
         height: 720,
     };
 
-    export let parentWidth, parentHeight;
+    export let parentWidth;
+    export let parentHeight;
+    export let visitedCountries: string[] = []; // Reactive prop from parent
 
     const path = geoPath();
     const ratios = new Map();
@@ -18,6 +20,9 @@
     let projection;
     let deps: any = [];
     let meshWorld: any;
+
+    // Reactive set for quick lookup
+    $: visitedCountrySet = new Set(visitedCountries);
 
     let scale = scaleLinear<string, string>()
         .domain([0, 1])
@@ -37,7 +42,6 @@
 
         const [tx, ty] = geoNaturalEarth1().translate();
 
-        // TODO: Lots of magic constants, I'll let it pass for now.
         projection = geoNaturalEarth1()
             .scale(150)
             .translate([tx - 50, ty - 50])
@@ -71,7 +75,11 @@
                 <path
                     fill={scale(ratios.get(feature.properties.name))}
                     d={path(feature)}
-                    class="country"
+                    class="country {visitedCountrySet.has(
+                        feature.properties.name,
+                    )
+                        ? 'visited'
+                        : ''}"
                 />
             {/each}
         </g>
@@ -89,19 +97,18 @@
 
     /* Default country color */
     .country {
-        fill: #6b7280;
-        stroke: #111827;
-        line-height: 10;
+        fill: #4a4a4a; /* Dark Gray */
+        stroke: #333333; /* Very Dark Gray for borders */
         transition: fill 0.3s ease;
     }
 
     /* Hovered country color */
     .country:hover {
-        fill: #1e90ff !important;
+        fill: #87869c !important;
     }
 
     /* Visited country color */
     .country.visited {
-        fill: #00c853 !important;
+        fill: #1e90ff !important;
     }
 </style>

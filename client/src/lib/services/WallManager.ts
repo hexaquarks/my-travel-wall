@@ -43,6 +43,10 @@ export default class WallManager {
         return get(this.countryCards);
     }
 
+    getVisitedCountries = (): string[] => {
+        return get(this.countryCards).map((cardInfo: CountryCardType) => (cardInfo.country));
+    }
+
     saveWall = async () => {
         const cards = get(this.countryCards);
         const meta = get(this.wallMetaInfo);
