@@ -44,7 +44,7 @@
 
         projection = geoNaturalEarth1()
             .scale(150)
-            .translate([tx - 50, ty - 50])
+            .translate([tx + 215, ty - 50])
             .center([0, 10])
             .clipExtent([
                 [0, 0],
@@ -97,8 +97,8 @@
 
     /* Default country color */
     .country {
-        fill: #4a4a4a; /* Dark Gray */
-        stroke: #333333; /* Very Dark Gray for borders */
+        fill: #4a4a4a;
+        stroke: #333333;
         transition: fill 0.3s ease;
     }
 
