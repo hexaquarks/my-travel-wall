@@ -19,6 +19,19 @@
 
     let countryError = false;
 
+    const onKeyDown = (e: KeyboardEvent) => {
+        switch (e.key) {
+            case "Enter": {
+                confirmSelection();
+                break;
+            }
+            case "Escape": {
+                closeModal();
+                break;
+            }
+        }
+    };
+
     const handleCountryChange = (event: Event) => {
         const target = event.target as HTMLSelectElement;
         selectedCountry = target.value;
@@ -59,6 +72,7 @@
     const cFooter = "flex justify-end space-x-2";
 </script>
 
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 {#if $modalStore[0]}
     <div class={cBase}>
         <header class={cHeader}>
