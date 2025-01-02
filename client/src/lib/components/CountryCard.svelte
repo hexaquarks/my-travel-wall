@@ -11,7 +11,7 @@
         EditOutline,
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
-    import { formatDate, getRandomImages } from "$lib/util/util";
+    import { formatDate } from "$lib/util/util";
     import ImagePreviewModal from "./ImagePreviewModal.svelte";
 
     import type { ModalSettings } from "@skeletonlabs/skeleton";
@@ -30,7 +30,6 @@
     export let onDeleteCard: (id: string) => void;
     export let cardData: CountryCardFormData = { country: "" };
 
-    cardData.pictures = getRandomImages(5);
     let isExpanded = false;
 
     const modalStore = getModalStore();
