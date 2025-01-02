@@ -4,6 +4,19 @@
     export let pictures: string[] = [];
     export let startIndex: number = 0;
 
+    enum KeyEnum {
+        Right = 39,
+        Left = 37,
+    }
+
+    const onKeyDown = (e: any) => {
+        if (e.keyCode == KeyEnum.Left) {
+            prevImage();
+        } else if (e.keyCode == KeyEnum.Right) {
+            nextImage();
+        }
+    };
+
     const modalStore = getModalStore();
     let currentIndex = startIndex;
 
@@ -19,6 +32,8 @@
         currentIndex = (currentIndex - 1 + pictures.length) % pictures.length;
     };
 </script>
+
+<svelte:window on:keydown|preventDefault={onKeyDown} />
 
 {#if $modalStore[0]}
     <div
