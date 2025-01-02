@@ -22,13 +22,16 @@
 
 {#if $modalStore[0]}
     <div
-        class="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4"
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
     >
         <div
-            class="relative rounded-lg shadow-xl max-w-3xl w-full p-4 bg-gray-900 flex flex-col items-center"
+            class="relative rounded-lg shadow-xl max-w-3xl w-full p-4 flex flex-col items-center"
         >
-            <div class="w-full flex justify-end mb-2">
-                <button class="btn-icon variant-filled" on:click={closeModal}>
+            <div class="w-full flex justify-end mb-6 ml-16">
+                <button
+                    class="btn-icon font-normal text-2xl variant-ghost"
+                    on:click={closeModal}
+                >
                     ×
                 </button>
             </div>
@@ -37,7 +40,7 @@
                 {#if pictures.length > 1}
                     <!-- Prev Button -->
                     <button
-                        class="btn variant-ghost text-xl"
+                        class="btn variant-ghost font-normal text-2xl"
                         on:click={prevImage}
                     >
                         ‹
@@ -54,7 +57,7 @@
                 {#if pictures.length > 1}
                     <!-- Next Button -->
                     <button
-                        class="btn variant-ghost text-xl"
+                        class="btn variant-ghost font-normal text-2xl"
                         on:click={nextImage}
                     >
                         ›
