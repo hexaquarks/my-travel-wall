@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace IdentityMongo.Models
 {
@@ -26,10 +27,7 @@ namespace IdentityMongo.Models
 
         public override string ToString()
         {
-            return $"CountryCard: {{ Id: {Id}, Country: {Country}, StartDate: {StartDate?.ToString("yyyy-MM-dd") ?? "N/A"}, " +
-                   $"EndDate: {EndDate?.ToString("yyyy-MM-dd") ?? "N/A"}, " +
-                   $"Pictures: [{(Pictures != null ? string.Join(", ", Pictures) : "N/A")}], " +
-                   $"Description: {Description ?? "N/A"} }}";
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
     }
 }

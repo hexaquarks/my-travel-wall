@@ -4,7 +4,7 @@
         getModalStore,
         initializeStores,
     } from "@skeletonlabs/skeleton";
-    import { defaultCountryCard } from "$lib/util/util";
+    import { defaultCountryCard, getRandomImages } from "$lib/util/util";
     import { WORLD_MAP_ANTARTICA_SIZE_TO_CUT } from "$lib/util/util";
 
     import type { ModalSettings } from "@skeletonlabs/skeleton";
@@ -75,6 +75,8 @@
                             ...countryPickerData,
                         } as CountryCardType);
                     } else {
+                        // TODO: For now on country card creation we insert 5 pictures.
+                        countryPickerData.pictures = getRandomImages(5);
                         wallManager.addCard(countryPickerData);
                     }
                 }
