@@ -11,7 +11,8 @@
         EditOutline,
     } from "flowbite-svelte-icons";
     import { slide } from "svelte/transition";
-    import { formatDate } from "$lib/util/util";
+    import { formatDate, getRandomImages } from "$lib/util/util";
+    import ImagePreviewModal from "./ImagePreviewModal.svelte";
 
     import type { ModalSettings } from "@skeletonlabs/skeleton";
     import type { CountryCardFormData } from "$lib/types/types";
@@ -29,11 +30,7 @@
     export let onDeleteCard: (id: string) => void;
     export let cardData: CountryCardFormData = { country: "" };
 
-    // Temporary for testing, of course
-    cardData.pictures = Array(5).fill(
-        "https://st3.depositphotos.com/17828278/33150/v/450/depositphotos_331503262-stock-illustration-no-image-vector-symbol-missing.jpg",
-    );
-    cardData.pictures = [];
+    cardData.pictures = getRandomImages(5);
     let isExpanded = false;
 
     const modalStore = getModalStore();
@@ -50,6 +47,19 @@
             },
         };
         modalStore.trigger(deleteCardConfirmationModal);
+    };
+
+    const openImageModal = (index: number) => {
+        modalStore.trigger({
+            type: "component",
+            component: {
+                ref: ImagePreviewModal,
+                props: {
+                    pictures: cardData.pictures,
+                    startIndex: index,
+                },
+            },
+        });
     };
 
     const toggleExpand = () => {
@@ -147,27 +157,36 @@
                         <h3
                             class="text-lg font-semibold flex items-center gap-2"
                         >
-                            <ClockOutline class="w-5 h-5" />Memories
+                            <ClockOutline class="w-5 h-5" /> Memories
                         </h3>
                         <div
                             class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-4"
                         >
                             {#each cardData.pictures as picture, i (i)}
+                                <!-- Image Thumbnail -->
                                 <div
-                                    class="snap-center shrink-0 card w-40 md:w-80 text-center"
+                                    class="snap-center shrink-0 card w-40 text-center"
                                 >
-                                    <img
-                                        class="snap-center w-full h-full rounded-container-token"
-                                        src={picture}
-                                        alt={`trip picture ${i + 1}`}
-                                        loading="lazy"
-                                    />
+                                    <button
+                                        type="button"
+                                        class="snap-center shrink-0 w-40 h-40 text-center p-0 border-none bg-transparent relative"
+                                        on:click={() => openImageModal(i)}
+                                        aria-label={`Preview trip picture #${i + 1}`}
+                                    >
+                                        <img
+                                            class="rounded-container-token w-full h-full object-cover"
+                                            src={picture}
+                                            alt={`trip picture ${i + 1}`}
+                                            loading="lazy"
+                                        />
+                                    </button>
                                 </div>
                             {/each}
                         </div>
                     </div>
                 {/if}
-                <!-- Description -->
+
+                <!-- Card description  -->
                 {#if cardData.description}
                     <div class="py-2 rounded-md">
                         <h3
