@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using IdentityMongo.Models;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace IdentityMongo.Controllers
 {
@@ -28,7 +29,7 @@ namespace IdentityMongo.Controllers
                 Console.Write("Cards: ");
                 foreach (CountryCard card in user.wallInfo.Cards)
                 {
-                    Console.Write(card + " ");
+                    Console.Write(card.ToString() + " ");
                 }
                 Console.WriteLine("");
                 return Ok(user.wallInfo);
