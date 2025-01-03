@@ -1,8 +1,7 @@
 <script lang="ts">
-    import { defaultCountryCard } from "$lib/util/util";
     import { getModalStore } from "@skeletonlabs/skeleton";
-    import { formatDate } from "$lib/util/util";
-
+    import { defaultCountryCard, formatDate } from "$lib/util/util";
+    import ImagePreviewCarousel from "./ImagePreviewCarousel.svelte";
     import type { CountryCardType } from "$lib/types/types";
 
     const modalStore = getModalStore();
@@ -16,33 +15,49 @@
     let selectedEndDate = formatDate(modalInitialData.endDate);
     let pictures = modalInitialData.pictures ?? [];
     let description = modalInitialData.description ?? "";
-
     let countryError = false;
 
+    let fileInput: HTMLInputElement;
+
+    let isPreviewOpen = false;
+    let previewIndex = 0;
+
     const onKeyDown = (e: KeyboardEvent) => {
-        switch (e.key) {
-            case "Enter": {
-                confirmSelection();
-                break;
-            }
-            case "Escape": {
-                closeModal();
-                break;
-            }
-        }
+        if (e.key === "Enter") confirmSelection();
+        if (e.key === "Escape") closeModal();
     };
 
-    const handleCountryChange = (event: Event) => {
-        const target = event.target as HTMLSelectElement;
-        selectedCountry = target.value;
+    const handleCountryChange = (e: Event) => {
+        selectedCountry = (e.target as HTMLSelectElement).value;
         countryError = false;
     };
 
-    const handlePicturesChange = (event: Event) => {
-        const target = event.target as HTMLInputElement;
-        if (target.files) {
-            pictures = Array.from(target.files).map((file) => file.name);
-        }
+    const handleAddPictures = (e: Event) => {
+        const input = e.target as HTMLInputElement;
+        if (!input.files) return;
+        const newUrls = Array.from(input.files).map((f) =>
+            URL.createObjectURL(f),
+        );
+        pictures = [...pictures, ...newUrls];
+        input.value = "";
+    };
+
+    const pickFiles = () => {
+        fileInput.click();
+    };
+
+    const removeImage = (i: number) => {
+        pictures.splice(i, 1);
+        pictures = [...pictures];
+    };
+
+    const openPreview = (i: number) => {
+        previewIndex = i;
+        isPreviewOpen = true;
+    };
+
+    const closePreview = () => {
+        isPreviewOpen = false;
     };
 
     const closeModal = () => {
@@ -54,14 +69,13 @@
             countryError = true;
             return;
         }
-
         if ($modalStore[0]?.response) {
             $modalStore[0].response({
                 country: selectedCountry,
                 startDate: selectedStartDate || null,
                 endDate: selectedEndDate || null,
-                pictures: pictures,
-                description: description,
+                pictures,
+                description,
             });
         }
         modalStore.close();
@@ -73,13 +87,13 @@
 </script>
 
 <svelte:window on:keydown|preventDefault={onKeyDown} />
+
 {#if $modalStore[0]}
     <div class={cBase}>
         <header class={cHeader}>
             {$modalStore[0].title ?? "Add Trip Experience"}
         </header>
         <div class="space-y-4">
-            <!-- Country Selection (Required) -->
             <div>
                 <label for="country" class="block text-sm font-medium">
                     Country <span class="text-red-500">*</span>
@@ -99,8 +113,8 @@
                         <option value="" disabled selected
                             >Select a country</option
                         >
-                        {#each countries as country}
-                            <option value={country.name}>{country.name}</option>
+                        {#each countries as c}
+                            <option value={c.name}>{c.name}</option>
                         {/each}
                     {/if}
                 </select>
@@ -111,7 +125,6 @@
                 {/if}
             </div>
 
-            <!-- Date Selection (Optional) -->
             <div class="flex space-x-4">
                 <div class="flex-1">
                     <label for="start-date" class="block text-sm font-medium">
@@ -137,23 +150,66 @@
                 </div>
             </div>
 
-            <!-- Pictures Upload (Optional) -->
+            <!-- Add Pictures -->
             <div>
-                <label for="pictures" class="block text-sm font-medium">
+                <label for="add-file" class="block text-sm font-medium">
                     Pictures <span class="text-gray-500">(optional)</span>
                 </label>
-                <div class="mt-1">
-                    <input
-                        id="pictures"
-                        type="file"
-                        class="file-input w-full pl-5 variant-form-material"
-                        multiple
-                        on:change={handlePicturesChange}
-                    />
-                </div>
+                <button
+                    type="button"
+                    class="btn variant-filled-primary mt-1"
+                    on:click={pickFiles}
+                >
+                    Add pictures...
+                </button>
+                <input
+                    id="add-file"
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    bind:this={fileInput}
+                    class="hidden"
+                    on:change={handleAddPictures}
+                />
             </div>
 
-            <!-- Description (Optional) -->
+            <!-- Thumbnails -->
+            {#if pictures.length > 0}
+                <div>
+                    <h3 class="text-lg font-semibold">Selected Images</h3>
+                    <div
+                        class="snap-x scroll-px-4 snap-mandatory scroll-smooth flex gap-4 overflow-x-auto px-4 py-4"
+                    >
+                        {#each pictures as pic, i (i)}
+                            <div
+                                class="snap-center shrink-0 w-40 h-40 border border-gray-300 rounded relative group"
+                            >
+                                <button
+                                    type="button"
+                                    class="absolute top-1 right-1 bg-red-600 text-white text-xs px-2 py-1 rounded hidden group-hover:block"
+                                    on:click|stopPropagation={() =>
+                                        removeImage(i)}
+                                    aria-label="Remove image"
+                                >
+                                    X
+                                </button>
+                                <button
+                                    type="button"
+                                    class="w-full h-full p-0 bg-transparent"
+                                    on:click={() => openPreview(i)}
+                                >
+                                    <img
+                                        class="w-full h-full object-cover rounded"
+                                        src={pic}
+                                        alt=""
+                                    />
+                                </button>
+                            </div>
+                        {/each}
+                    </div>
+                </div>
+            {/if}
+
             <div>
                 <label for="description" class="block text-sm font-medium">
                     Description <span class="text-gray-500">(optional)</span>
@@ -163,7 +219,6 @@
                     class="textarea w-full mt-1 variant-form-material"
                     rows="2"
                     bind:value={description}
-                    placeholder="Share your experiences from this trip..."
                 ></textarea>
             </div>
         </div>
@@ -184,4 +239,11 @@
             </button>
         </footer>
     </div>
+
+    <ImagePreviewCarousel
+        isOpen={isPreviewOpen}
+        {pictures}
+        startIndex={previewIndex}
+        onClose={closePreview}
+    />
 {/if}

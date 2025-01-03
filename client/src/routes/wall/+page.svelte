@@ -76,7 +76,7 @@
                         } as CountryCardType);
                     } else {
                         // TODO: For now on country card creation we insert 5 pictures.
-                        countryPickerData.pictures = getRandomImages(5);
+                        // countryPickerData.pictures = getRandomImages(5);
                         wallManager.addCard(countryPickerData);
                     }
                 }
